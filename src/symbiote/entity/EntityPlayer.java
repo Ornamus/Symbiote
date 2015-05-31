@@ -72,7 +72,7 @@ public class EntityPlayer extends LivingEntity {
     public void tick() {
         super.tick();
         if ((playing && !symbioteControlled) || (Client.symbiote && symbioteControlled)) {
-            if (!Main.server) {
+            if (Main.client) {
                 if (keysPressed.contains("w")) {
                     yVel = -speed;
                 }

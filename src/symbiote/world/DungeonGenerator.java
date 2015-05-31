@@ -19,6 +19,10 @@ public class DungeonGenerator {
     private static List<Thing> things = new ArrayList<>();
     private static List<Room> rooms = new ArrayList<>();
     
+    /**
+     * Generates a game world.
+     * @return All the Things that make up the new game world.
+     */
     public static List<Thing> generate() { //Program every task so that it loops and can terminate once all available options have been tried and failed
         
         things.clear();
@@ -57,6 +61,10 @@ public class DungeonGenerator {
         return things;
     }
 
+    /**
+     * Makes a hallway that branches off from the given Room.
+     * @return A HashMap that contains data such as whether the Hallway was successfully made and the Hallway itself.
+     */
     public static HashMap<String, Object> makeHallway(Room r) {
         HashMap<String, Object> result = new HashMap();
         Hallway h = null;
@@ -89,6 +97,10 @@ public class DungeonGenerator {
         return result;
     }
     
+    /**
+     * Attaches the second Room to a random Exit on the first Room.
+     * @return Whether the attaching was successful.
+     */
     public static boolean attach(Room r1, Room r2) {
         List<Pair<Exit, Exit>> failed = new ArrayList<>();
         while (true) {
@@ -136,6 +148,10 @@ public class DungeonGenerator {
         }
     }
     
+    /**
+     * Attaches a given Room to a given Exit.
+     * @return Whether the attaching was successful.
+     */
     public static boolean attach(Exit ex, Room r) {
         List<Exit> failed = new ArrayList<>();
         while (true) {
@@ -174,6 +190,10 @@ public class DungeonGenerator {
         }
     }    
         
+    /**
+     * Checks if a a given Pair of Exits is contained in a list of Pairs of Exits.
+     * @return If the Pair of Exits is contained in a list of Pairs of Exits.
+     */
     public static boolean contains(List<Pair<Exit, Exit>> pairs, Pair<Exit, Exit> pair) {
         for (Pair p : pairs) {
             if (p.equals(pair)) {

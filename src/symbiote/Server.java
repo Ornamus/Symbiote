@@ -41,7 +41,7 @@ public class Server extends Thread {
                 }
             }
         };
-        tickThread.start();
+        if (!(Main.client && Main.server)) tickThread.start();
         ServerSocket listener = null;
         try {
             listener = new ServerSocket(port);
@@ -74,12 +74,18 @@ public class Server extends Thread {
         }
     }
     
+    /**
+     * Sends a message to every client.
+     */
     public static void broadcast(String message) {
         for (Communicator c : clients) {
             c.out.println(message);
         }
     }
     
+    /**
+     * Sends a message to every client except for c.
+     */
     public static void broadcast(String message, Communicator c) {
         for (Communicator c2 : clients) {
             if (c != c2) {
@@ -88,6 +94,9 @@ public class Server extends Thread {
         }
     }
     
+    /**
+     * Sends data to every client.
+     */
     public static void broadcast(Object[] array) {
         String message = "";
         for (Object o : array) {
@@ -96,6 +105,9 @@ public class Server extends Thread {
         broadcast(message);
     }   
     
+    /**
+     * Sends data to every client except for c.
+     */
     public static void broadcast(Object[] array, Communicator c) {
         String message = "";
         for (Object o : array) {

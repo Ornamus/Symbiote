@@ -8,13 +8,16 @@ public class Main {
 
     public static Screen screen;
     Server s = null;
+    public static boolean client = false;
     public static boolean server = false;
     
     public Main() {
         int result = JOptionPane.showConfirmDialog(null, "Boot as client?");
         screen = new Screen();
+        
         if (result == 0) {
             new Client();
+            client = true;
         } else if (result == 1) {
             s = new Server();
             s.start();

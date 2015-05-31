@@ -5,17 +5,15 @@
             <url>src/symbiote/screen/Screen.java</url>
             <bookmark id="1">
                 <name/>
-                <line>37</line>
+                <line>40</line>
                 <key/>
             </bookmark>
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Wesley/Documents/NetBeansProjects/Symbiote/src/symbiote/entity/EntitySymbiote.java</file>
-            <file>file:/C:/Users/Wesley/Documents/NetBeansProjects/Symbiote/src/symbiote/entity/EntityPlayer.java</file>
-            <file>file:/C:/Users/Wesley/Documents/NetBeansProjects/Symbiote/src/symbiote/client/Client.java</file>
-            <file>file:/C:/Users/Wesley/Documents/NetBeansProjects/Symbiote/src/symbiote/Communicator.java</file>
+            <file>file:/C:/Users/Wesley/Documents/GitHub/Symbiote/src/symbiote/world/rooms/Hallway.java</file>
+            <file>file:/C:/Users/Wesley/Documents/GitHub/Symbiote/src/symbiote/Server.java</file>
         </group>
     </open-files>
 </project-private>

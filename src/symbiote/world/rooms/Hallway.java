@@ -15,11 +15,11 @@ public class Hallway extends ThingCollection {
     public Hallway(Rectangle r, boolean horizontal) { //TODO make an exit at the other end of the hallway
         super(r.x, r.y, new ArrayList<>());
         if (horizontal) {
-            for (int cX = r.x; cX < r.getWidth() + r.x; cX += Room.gridUnit) {things.add(new Wall(cX, r.y, "tile.png"));}
-            for (int cX = r.x; cX < r.getWidth() + r.x; cX += Room.gridUnit) {things.add(new Wall(cX, r.y + r.height - Room.gridUnit, "tile.png"));}
+            for (int cX = r.x; cX < r.getWidth() + r.x; cX += Room.gridUnit) {things.add(new Wall(cX, r.y, "wallSheet.png"));}
+            for (int cX = r.x; cX < r.getWidth() + r.x; cX += Room.gridUnit) {things.add(new Wall(cX, r.y + r.height - Room.gridUnit, "wallSheet.png"));}
         } else {
-            for (int cY=r.y; cY < r.getHeight() + r.y; cY += Room.gridUnit) {things.add(new Wall(r.x, cY, "tile.png"));}
-            for (int cY=r.y; cY < r.getHeight() + r.y; cY += Room.gridUnit) {things.add(new Wall(r.x + r.width - Room.gridUnit, cY, "tile.png"));}
+            for (int cY=r.y; cY < r.getHeight() + r.y; cY += Room.gridUnit) {things.add(new Wall(r.x, cY, "wallSheet.png"));}
+            for (int cY=r.y; cY < r.getHeight() + r.y; cY += Room.gridUnit) {things.add(new Wall(r.x + r.width - Room.gridUnit, cY, "wallSheet.png"));}
         }
         area = new Area(r);
     }
@@ -30,6 +30,7 @@ public class Hallway extends ThingCollection {
         return !a.isEmpty();
     }
     
+    //TODO make this not terrible
     public void merge(Hallway h) {
         List<Thing> newThings = new ArrayList<>();
         for (Thing t : things) {

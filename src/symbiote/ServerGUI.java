@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServerGUI extends javax.swing.JFrame {
-
+    
     public ServerGUI() {
         initComponents();
     }

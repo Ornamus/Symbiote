@@ -113,6 +113,10 @@ public class Exit extends ThingCollection {
         return highest.y;
     }
     
+    /**
+     * Returns the "relevant dimension", which is either this Exit's width or height, depending on what direction the exit is.
+     * @return The "relevant dimension", which is either this Exit's width or height, depending on what direction the exit is.
+     */
     public double getRelevantDimension() {
         if (hallwayPossible) {
             if (horizontal) {

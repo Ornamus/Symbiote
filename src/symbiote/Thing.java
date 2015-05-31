@@ -9,7 +9,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import symbiote.entity.Entity;
 import symbiote.resources.ImageHandler;
-import symbiote.world.Wall;
+import symbiote.world.Solid;
 
 public class Thing { //A Thing is any object that exists in the world that will be drawn and/or have logic.
     
@@ -32,18 +32,33 @@ public class Thing { //A Thing is any object that exists in the world that will 
         image = ImageHandler.getImage(imageName);
     }
     
+    /**
+     * The looping code of this Thing. Generally used for game logic.
+     */
     public void tick() {}
     
+    /**
+     * Checks whether this thing intersects a shape.
+     * @return Whether this thing intersects a shape.
+     */
     public boolean intersects(Shape shape) {
         Area areaA = new Area(getCollisionBox());
         areaA.intersect(new Area(shape));
         return !areaA.isEmpty();
     }
     
+    /**
+     * Checks whether this thing intersects another Thing.
+     * @return Whether this thing intersects another Thing.
+     */
     public boolean intersects(Thing t) {
         return intersects(t.getCollisionBox());
     }
     
+    /**
+     * Gets the collision box of this Thing.
+     * @return The collision box of this Thing.
+     */
     public Shape getCollisionBox() {
         Shape shape = new Rectangle2D.Double(x, y, image.getWidth(), image.getHeight());
         if (!dontUse) {
@@ -83,7 +98,7 @@ public class Thing { //A Thing is any object that exists in the world that will 
     
     public void collide(Thing t) {}
     public void collide(Entity e) {}
-    public void collide(Wall w) {}
+    public void collide(Solid s) {}
 
     public void draw(Graphics2D g) {
         if (image != null && !dontUse) {
@@ -91,11 +106,18 @@ public class Thing { //A Thing is any object that exists in the world that will 
         }
     }
     
+    /**
+     * Adds this Thing to the removal queue and marks it as destroyed.
+     */
     public void destroy() {
         Main.screen.removeThings.add(this);
         destroyed = true;
     }
     
+    /**
+     * Adds a Thing to the add queue and returns it.
+     * @return The Thing you just added to the add queue.
+     */
     public static Thing create(Thing t) {
         Main.screen.addThings.add(t);
         return t;

@@ -35,7 +35,7 @@ public class Room extends ThingCollection {
                 if (Util.same(p.color, new Color(153, 217, 234))) { //Exit color
                     exitPixels.add(p);
                 } else {
-                    things.add(new Wall(p.x * gridUnit, p.y * gridUnit, "tile.png"));
+                    things.add(new Wall(p.x * gridUnit, p.y * gridUnit, "wallSheet.png"));
                 }
                 borderPixels.add(p);
             }
@@ -71,15 +71,17 @@ public class Room extends ThingCollection {
         add(x, y);
         
         //TODO Allign to grid, make it not laggy, draw behind everything else
+        
+        /*
         Area area = getArea(true);
         for (int dY = 0; dY < area.getBounds().height; dY += gridUnit) {
             for (int dX = 0; dX < area.getBounds().width; dX += gridUnit) {
                 if (area.contains(dX, dY) && area.contains(dX + gridUnit, dY + gridUnit)) {
-                    //System.out.println("Made back at " + dX + ", " + dY);
-                    //things.add(new Wall(dX, dY, "back.png"));
+                    System.out.println("Made back at " + dX + ", " + dY);
+                    things.add(new Wall(dX, dY, "back.png"));
                 }
             }
-        }
+        }*/
     }
     
     public boolean atPoint(int x, int y, List<Pixel> pixels) {
@@ -97,6 +99,11 @@ public class Room extends ThingCollection {
         return !a.isEmpty();
     }
     
+    /**
+     * Gets the area this Room covers.
+     * @param useBorder Whether the outer border of the room should be included in the area.
+     * @return The area this Room covers.
+     */
     public Area getArea(boolean useBorder) {
         boolean excludeBorder = !useBorder;
         int decreaseAmount = (excludeBorder ? gridUnit : 0);
@@ -114,9 +121,7 @@ public class Room extends ThingCollection {
                     
                 }
             }
-            //System.out.println(startX + ", " + endX);
             Rectangle r = new Rectangle((startX * gridUnit) + Util.round(x) + decreaseAmount, (pY * gridUnit) + Util.round(y), (endX - startX + 1) * gridUnit - (decreaseAmount * 2), gridUnit);
-            //System.out.println(r.getX() + ", " + r.getY() + ", " + r.getWidth() + ", " + r.getHeight());
             shapes.add(r);
         }
         Area a = new Area(new Rectangle(Util.round(x), Util.round(y), 0, 0));

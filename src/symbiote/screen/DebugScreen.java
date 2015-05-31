@@ -13,7 +13,7 @@ public class DebugScreen extends Screen {
         for (Thing t : DungeonGenerator.generate()) {
             things.add(t);
         }
-        if (!Main.server) {
+        if (Main.client) {
             if (Client.symbiote) {
                 things.add(new EntitySymbiote(320, 320));
             } else {

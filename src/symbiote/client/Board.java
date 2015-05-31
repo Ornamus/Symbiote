@@ -32,16 +32,15 @@ public class Board extends JPanel implements ActionListener {
             if (player != null) {
                 offsetX = player.controlledEntity.getCenterX() - (Client.self.getWidth() / 2);
                 offsetY = player.controlledEntity.getCenterY() - (Client.self.getHeight() / 2);
-                g.translate(-offsetX, -offsetY);
             }
         } else {
             EntityPlayer player = EntityPlayer.get(Client.name);
             if (player != null) {
                 offsetX = player.getCenterX() - (Client.self.getWidth() / 2);
                 offsetY = player.getCenterY() - (Client.self.getHeight() / 2);
-                g.translate(-offsetX, -offsetY);
             }
         }
+        g.translate(-offsetX, -offsetY);
         
         Main.screen.tick();
         Main.screen.draw(g);

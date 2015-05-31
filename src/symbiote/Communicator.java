@@ -203,6 +203,9 @@ public class Communicator extends Thread {
         }
     }
 
+    /**
+     * Loops at 25ms until a message appears in the BufferedReader.
+     */
     public void waitForMessage() {
         try {
             while (!in.ready()) {

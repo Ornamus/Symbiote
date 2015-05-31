@@ -1,8 +1,7 @@
 package symbiote.entity;
 
-import symbiote.client.Client;
 import symbiote.resources.AnimationFactory;
-import symbiote.world.Wall;
+import symbiote.world.Solid;
 
 public class EntityBullet extends Entity {
 
@@ -28,7 +27,7 @@ public class EntityBullet extends Entity {
     }
 
     @Override
-    public void collide(Wall w) {
+    public void collide(Solid s) {
         destroy();
     }
 

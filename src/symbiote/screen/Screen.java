@@ -12,6 +12,9 @@ public class Screen {
     public List<Thing> things = new ArrayList<>();
     public List<Thing> removeThings = new ArrayList<>();
     
+     /**
+     * The looping code of this Screen. Generally used for game logic.
+     */
     public void tick() {
         for (Thing t : new ArrayList<>(addThings)) {
             things.add(t);

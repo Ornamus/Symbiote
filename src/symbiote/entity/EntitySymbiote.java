@@ -60,7 +60,7 @@ public class EntitySymbiote extends LivingEntity {
             keysPressed.remove("d");
         }
      
-        if (!Main.server && playing) {
+        if (Main.client && playing) {
             if (k.getKeyCode() == KeyEvent.VK_E) {
                 if (controlledEntity == this) {
                     Point p = Util.getMouseInWorld();
@@ -89,7 +89,7 @@ public class EntitySymbiote extends LivingEntity {
     @Override
     public void tick() {
         super.tick();
-        if (!Main.server && controlledEntity == this && playing) {
+        if (Main.client && controlledEntity == this && playing) {
             if (keysPressed.contains("w")) {
                 yVel = -speed;
             }

@@ -1,15 +1,8 @@
 package symbiote.entity;
 
-import com.sun.glass.ui.Pixels;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.geom.Area;
-import java.util.ArrayList;
-import java.util.List;
 import symbiote.misc.Util;
-import symbiote.resources.ImageHandler;
-import symbiote.resources.Pixel;
 
 public class LivingEntity extends Entity {
     
@@ -30,6 +23,9 @@ public class LivingEntity extends Entity {
         }
     }
     
+    /**
+     * Draws this LivingEntity's health bar at dX and dY.
+     */
     public void drawHealth(double dX, double dY, Graphics2D g) {
         int healthBarWidth = 32;
         
