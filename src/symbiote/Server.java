@@ -1,6 +1,7 @@
 package symbiote;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class Server extends Thread {
         try {
             listener = new ServerSocket(port);
             gui.refreshClients();
-            gui.log("Server started on port " + port + ".");
+            gui.log("Server started on " + InetAddress.getLocalHost().getHostAddress() + ":" + port + ".");
         } catch (IOException ex) {
         }
         try {
