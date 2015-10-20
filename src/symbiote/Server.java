@@ -3,8 +3,11 @@ package symbiote;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.util.AbstractQueue;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,22 +20,47 @@ public class Server extends Thread {
     public Thread tickThread;
 
     public Server() {
-        gui = new ServerGUI();
-        gui.setVisible(true);
+        // TODO: de-static
+        this(Server.port);
     }
     
     public Server (int port) {
         Server.port = port;
-        gui = new ServerGUI();
+        gui = new ServerGUI(this);
         gui.setVisible(true);
     }
+    
+    private AbstractQueue<String> commandQueue = new ConcurrentLinkedQueue<String>();
 
+    public void queueCommand(String command) {
+        commandQueue.add(command);
+    }
+    
+    /**
+     * Executes a user's command on the server.
+     * @param cmd The command given by the user
+     */
+    public void execute(String cmd) {
+        gui.log("> " + cmd);
+        
+        if (cmd.startsWith("/echo ")) {
+            String msg = cmd.substring(cmd.indexOf(' ') + 1);
+            gui.log(msg);
+            System.out.println(msg);
+        }
+    }
+    
     @Override
     public void run() {
         tickThread = new Thread() {
             @Override
             public void run() {
                 while (true) {
+                    String cmd;
+                    while ((cmd = commandQueue.poll()) != null) {
+                        Server.this.execute(cmd);
+                    }
+                    
                     Main.screen.tick();
                     try {
                         sleep(25);

@@ -1,12 +1,23 @@
 package symbiote;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ServerGUI extends javax.swing.JFrame {
+    Server server;
     
-    public ServerGUI() {
+    public ServerGUI(Server server) {
         initComponents();
+        
+        jTextField1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                server.queueCommand(jTextField1.getText());
+                jTextField1.setText("");
+            }
+        });
     }
     
     public void log(String s) {
