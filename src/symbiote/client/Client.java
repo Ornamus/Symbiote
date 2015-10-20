@@ -27,4 +27,3 @@ public class Client extends JFrame {
         setVisible(true);
     }
 }
-

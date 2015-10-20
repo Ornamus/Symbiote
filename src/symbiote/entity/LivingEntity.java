@@ -16,6 +16,12 @@ public class LivingEntity extends Entity {
     }
     
     @Override
+    public void tick() {
+        super.tick();
+        if (health < 0) health = 0;
+    }
+    
+    @Override
     public void draw(Graphics2D g) {
         super.draw(g);
         if (maxHealth > health) {

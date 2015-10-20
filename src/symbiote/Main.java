@@ -1,5 +1,6 @@
 package symbiote;
 
+import java.util.HashMap;
 import symbiote.client.Client;
 import javax.swing.JOptionPane;
 import symbiote.screen.Screen;
@@ -10,6 +11,8 @@ public class Main {
     Server s = null;
     public static boolean client = false;
     public static boolean server = false;
+    
+    public static HashMap<String, PacketHandler> packetHandlers = new HashMap<>();
     
     public Main() {
         int result = JOptionPane.showConfirmDialog(null, "Boot as client?");
@@ -27,5 +30,9 @@ public class Main {
     
     public static void main(String[] args) {      
         new Main();
-    }   
+    }
+    
+    public static void addHandler(PacketHandler p) {
+        packetHandlers.put(p.packetType, p);
+    }
 }

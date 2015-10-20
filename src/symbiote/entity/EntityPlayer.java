@@ -63,7 +63,7 @@ public class EntityPlayer extends LivingEntity {
     @Override
     public void mouseReleased(int x, int y) {
         if ((playing && !symbioteControlled) || (Client.symbiote && symbioteControlled)) {
-            Point p = Util.getMouseOnScreen();
+            Point p = Util.getMouseInWorld(); //TODO check if this makes bullets work properly
             Client.communicator.sendMessage(new Object[]{"entity", "bullet", getCenterX(), getCenterY(), Util.angle(getCenterX(), getCenterY(), p.x, p.y), Client.name});
         }
     }
