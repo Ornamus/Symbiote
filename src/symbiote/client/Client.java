@@ -11,7 +11,7 @@ public class Client extends JFrame {
     public static String name = "";
     public static boolean symbiote = false;
     
-    public Client() {
+    public Client() { //TODO send disconnect packet when client closes
         setSize(800, 600);
         communicator = new Communicator();
         communicator.start();

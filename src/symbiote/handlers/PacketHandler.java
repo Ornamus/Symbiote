@@ -1,4 +1,4 @@
-package symbiote;
+package symbiote.handlers;
 
 public class PacketHandler {
     

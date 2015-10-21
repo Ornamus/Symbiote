@@ -1,5 +1,6 @@
 package symbiote;
 
+import symbiote.handlers.PacketHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

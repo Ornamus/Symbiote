@@ -1,8 +1,10 @@
 package symbiote;
 
+import symbiote.handlers.PacketHandler;
 import java.util.HashMap;
 import symbiote.client.Client;
 import javax.swing.JOptionPane;
+import symbiote.handlers.PlayerHandler;
 import symbiote.screen.Screen;
 
 public class Main {
@@ -17,6 +19,9 @@ public class Main {
     public Main() {
         int result = JOptionPane.showConfirmDialog(null, "Boot as client?");
         screen = new Screen();
+        
+        //Packet Handler
+        addHandler(new PlayerHandler());
         
         if (result == 0) {
             new Client();
