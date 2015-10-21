@@ -68,6 +68,7 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
 
     double lastX = 0;
     double lastY = 0;
+    double lastAngle = 0;
     long lastSend = 0;
 
     @Override
@@ -100,11 +101,12 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
                     }
                 }
                 
-                if (System.currentTimeMillis() - lastSend > 200 && (x != lastX || y != lastY)) {
+                if (System.currentTimeMillis() - lastSend > 200 && (x != lastX || y != lastY || angle != lastAngle)) {
                     lastSend = System.currentTimeMillis();
                     Client.communicator.sendMessage(new CPacketPosition(this.id, x, y, angle));
                     lastX = x;
                     lastY = y;
+                    lastAngle = angle;
                 }
             }
         }

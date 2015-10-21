@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
-
 import symbiote.Main;
 import symbiote.client.Board;
 import symbiote.client.Client;
@@ -101,6 +100,7 @@ public class ClientEntityThisSymbiote extends ClientEntitySymbiote implements In
 
     double lastX = 0;
     double lastY = 0;
+    double lastAngle = 0;
     long lastSend;
 
     @Override
@@ -132,11 +132,12 @@ public class ClientEntityThisSymbiote extends ClientEntitySymbiote implements In
                 }
             }
             
-            if (System.currentTimeMillis() - lastSend > 200 && (x != lastX || y != lastY)) {
+            if (System.currentTimeMillis() - lastSend > 200 && (x != lastX || y != lastY || angle != lastAngle)) {
                 lastSend = System.currentTimeMillis();
                 Client.communicator.sendMessage(new CPacketPosition(this.id, x, y, angle));
                 lastX = x;
                 lastY = y;
+                lastAngle = angle;
             }
         }
     }

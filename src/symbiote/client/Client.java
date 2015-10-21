@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import symbiote.client.screen.Screen;
 import symbiote.entity.AbstractEntity;
+import symbiote.network.CPacketDisconnect;
 import symbiote.network.ClientCommunicator;
 import symbiote.network.Communicator;
 
@@ -57,5 +58,12 @@ public class Client extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         self = this;
         setVisible(true);
+        
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                communicator.sendMessage(new CPacketDisconnect(name));
+            }
+        });
     }
 }

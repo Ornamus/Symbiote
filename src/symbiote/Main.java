@@ -31,6 +31,7 @@ public class Main {
         addPacket(9, CPacketPosition.class);
         addPacket(10, SPacketPing.class);
         addPacket(11, SPacketBullet.class);
+        addPacket(12, SPacketEntityDestroy.class);
         
         if (result == -1)
             result = JOptionPane.showOptionDialog(

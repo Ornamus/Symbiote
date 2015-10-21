@@ -2,6 +2,8 @@ package symbiote.network;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import symbiote.entity.EntityPlayer;
+import symbiote.server.Server;
 
 public class CPacketDisconnect extends AbstractPacket {
     String name;
@@ -25,10 +27,14 @@ public class CPacketDisconnect extends AbstractPacket {
 
     @Override
     public void handle(Communicator comm) {
-        // TODO: disconnect
-        /*ClientEntityPlayer p = ClientEntityPlayer.get(name);
-        if (p != null) {
-            p.destroy();
-        }*/
+        if (comm.getType() == Communicator.Type.SERVERSIDE) {
+            EntityPlayer p = Server.getPlayer(name);
+            if (p != null) {
+                Server.broadcast(new SPacketEntityDestroy(p.id));
+                p.destroy();
+            }
+            Server.gui.refreshClients();
+            Server.gui.log(name + " has disconnected.");
+        }
     }
 }

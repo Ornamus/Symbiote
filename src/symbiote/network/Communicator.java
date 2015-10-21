@@ -39,7 +39,7 @@ public abstract class Communicator extends Thread {
                 continue;
             }
             
-            out.writeByte(id);
+            out.writeByte(id); //TODO: this line errors repeatedly once this client has disconnected, which is weird, since this all should terminate once the connection closes
             
             byte[] b = s.toBytes();
             
