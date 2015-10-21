@@ -5,13 +5,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+
 import static java.lang.Thread.sleep;
+
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JOptionPane;
+
 import static symbiote.Server.clients;
 import symbiote.client.Client;
 import symbiote.entity.EntityBullet;
@@ -27,6 +32,9 @@ public class Communicator extends Thread {
     public BufferedReader in;
     public PrintWriter out;
 
+    private InetAddress serverIp;
+    private int serverPort;
+    
     public String name = "";
     public boolean server;
     public boolean connected = false;
@@ -34,8 +42,11 @@ public class Communicator extends Thread {
     List<String> addMessages = new ArrayList<>();
     List<String> messages = new ArrayList<>();
 
-    public Communicator() {
+    public Communicator(InetAddress ip, int port) {
         server = false;
+        
+        this.serverIp = ip;
+        this.serverPort = port;
     }
     
     public Communicator(Socket socket) {
@@ -47,8 +58,8 @@ public class Communicator extends Thread {
     public void run() {
         try {
             if (!server) {              
-                //socket = new Socket("73.24.67.1", 9001);
-                socket = new Socket("73.21.249.165", 9001);
+                System.out.println("Connecting to server " + this.serverIp + ":" + this.serverPort);
+                socket = new Socket(this.serverIp, this.serverPort);
             }
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -190,9 +201,10 @@ public class Communicator extends Thread {
             if (reply.contains("accepted")) {
                 Client.name = submittedName;
                 Client.symbiote = Boolean.parseBoolean(reply.split(":")[1]);
-                JOptionPane.showMessageDialog(null, "Name accepted! You are " + (Client.symbiote ? "" : " not ") + "the Symbiote!");
+                JOptionPane.showMessageDialog(null, "Name accepted! You are " + (Client.symbiote ? "" : "not ") + "the Symbiote!");
                 return true;
             } else if (reply.contains("denied")) {
+                JOptionPane.showMessageDialog(null, "Name is already taken.");
                 return false;
             }
         }
