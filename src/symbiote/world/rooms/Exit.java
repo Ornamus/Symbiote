@@ -1,7 +1,8 @@
 package symbiote.world.rooms;
 
 import java.util.List;
-import symbiote.Thing;
+
+import symbiote.entity.AbstractEntity;
 import symbiote.misc.CrashError;
 
 public class Exit extends ThingCollection {
@@ -13,11 +14,11 @@ public class Exit extends ThingCollection {
     
     public boolean taken = false;
     
-    public Exit(List<Thing> parts, Room r) {
+    public Exit(List<AbstractEntity> parts, Room r) {
         super(0, 0, parts);
         double firstX = parts.get(0).x;
         double firstY = parts.get(0).y;
-        for (Thing t : parts) {
+        for (AbstractEntity t : parts) {
             if (t.x != firstX) {
                 vertical = true;
                 break;
@@ -61,7 +62,7 @@ public class Exit extends ThingCollection {
     }
     
     public boolean contains(double x, double y) {
-        for (Thing t : things) {
+        for (AbstractEntity t : things) {
             if (t.getCollisionBox().contains(x, y)) {
                 return true;
             }
@@ -74,8 +75,8 @@ public class Exit extends ThingCollection {
     }
 
     public double getLowestX() {
-        Thing lowest = null;
-        for (Thing t : things) {
+        AbstractEntity lowest = null;
+        for (AbstractEntity t : things) {
             if (lowest == null || t.x < lowest.x) {
                 lowest = t;
             }
@@ -84,8 +85,8 @@ public class Exit extends ThingCollection {
     }
     
     public double getHighestX() {
-        Thing highest = null;
-        for (Thing t : things) {
+        AbstractEntity highest = null;
+        for (AbstractEntity t : things) {
             if (highest == null || t.x > highest.x) {
                 highest = t;
             }
@@ -94,8 +95,8 @@ public class Exit extends ThingCollection {
     }
     
     public double getLowestY() {
-        Thing lowest = null;
-        for (Thing t : things) {
+        AbstractEntity lowest = null;
+        for (AbstractEntity t : things) {
             if (lowest == null || t.y < lowest.y) {
                 lowest = t;
             }
@@ -104,8 +105,8 @@ public class Exit extends ThingCollection {
     }
     
     public double getHighestY() {
-        Thing highest = null;
-        for (Thing t : things) {
+        AbstractEntity highest = null;
+        for (AbstractEntity t : things) {
             if (highest == null || t.y > highest.y) {
                 highest = t;
             }

@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import symbiote.Thing;
+
+import symbiote.entity.AbstractEntity;
 import symbiote.misc.Pair;
 import symbiote.misc.Util;
 import symbiote.world.rooms.Exit;
@@ -16,14 +17,14 @@ import symbiote.world.rooms.Room;
 public class DungeonGenerator {
     
     public static String[] roomNames = {"test"};
-    private static List<Thing> things = new ArrayList<>();
+    private static List<AbstractEntity> things = new ArrayList<>();
     private static List<Room> rooms = new ArrayList<>();
     
     /**
      * Generates a game world.
      * @return All the Things that make up the new game world.
      */
-    public static List<Thing> generate() { //Program every task so that it loops and can terminate once all available options have been tried and failed
+    public static List<AbstractEntity> generate() { //Program every task so that it loops and can terminate once all available options have been tried and failed
         
         things.clear();
         rooms.clear();
@@ -47,14 +48,14 @@ public class DungeonGenerator {
             HashMap<String, Object> result = makeHallway(prevRoom);
             if ((Boolean) result.get("success")) {
                 Hallway h = (Hallway) result.get("hallway");
-                for (Thing t : h.things) {
+                for (AbstractEntity t : h.things) {
                     things.add(t);
                 }
             }
         }
 
         for (Room r : rooms) {
-            for (Thing t : r.things) {
+            for (AbstractEntity t : r.things) {
                 things.add(t);
             }
         }
@@ -66,7 +67,7 @@ public class DungeonGenerator {
      * @return A HashMap that contains data such as whether the Hallway was successfully made and the Hallway itself.
      */
     public static HashMap<String, Object> makeHallway(Room r) {
-        HashMap<String, Object> result = new HashMap();
+        HashMap<String, Object> result = new HashMap<>();
         Hallway h = null;
 
         Exit e = null;

@@ -1,10 +1,15 @@
 package symbiote.client;
 
 import java.net.InetAddress;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import symbiote.Communicator;
+import symbiote.client.screen.Screen;
+import symbiote.entity.AbstractEntity;
+import symbiote.network.ClientCommunicator;
+import symbiote.network.Communicator;
 
+@SuppressWarnings("serial")
 public class Client extends JFrame {
     public static Client self;
     public static Board board;
@@ -12,10 +17,14 @@ public class Client extends JFrame {
     public static String name = "";
     public static boolean symbiote = false;
     
+    public static AbstractEntity focus = null;
+    
+    public static Screen screen;
     public Client() throws Exception {
+        Client.screen = new Screen();
+        
         setSize(800, 600);
         
-        // TODO: prompt is only temporary
         String ip = JOptionPane.showInputDialog("Please enter server address", "73.21.249.165:9001");
         
         if (ip == null)
@@ -35,7 +44,7 @@ public class Client extends JFrame {
         if (!addr.isReachable(5000))
             throw new Exception(addr + " is not reachable");
 
-        communicator = new Communicator(addr, port);
+        communicator = new ClientCommunicator(addr, port);
         communicator.start();
         
         board = new Board(this);

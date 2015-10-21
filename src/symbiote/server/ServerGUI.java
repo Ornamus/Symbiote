@@ -1,9 +1,11 @@
-package symbiote;
+package symbiote.server;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+
+import symbiote.network.Communicator;
 
 public class ServerGUI extends javax.swing.JFrame {
     Server server;
