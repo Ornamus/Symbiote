@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import symbiote.Main;
 import symbiote.misc.Util;
 
 public class InputListener implements MouseListener, KeyListener {
@@ -13,7 +12,7 @@ public class InputListener implements MouseListener, KeyListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         Point p = Util.getMouseOnScreen();
-        Main.screen.mouseClicked(p.x, p.y);
+        Client.screen.mouseClicked(p.x, p.y);
     }
 
     @Override
@@ -22,17 +21,17 @@ public class InputListener implements MouseListener, KeyListener {
     @Override
     public void mouseReleased(MouseEvent e) {
         Point p = Util.getMouseOnScreen();
-        Main.screen.mouseReleased(p.x, p.y);
+        Client.screen.mouseReleased(p.x, p.y);
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        //TODO implement
+        Client.screen.mouseEnter(e);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        //TODO implement
+        Client.screen.mouseLeave(e);
     }
 
     @Override
@@ -40,11 +39,11 @@ public class InputListener implements MouseListener, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        Main.screen.keyPressed(e);
+        Client.screen.keyPressed(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        Main.screen.keyReleased(e);
+        Client.screen.keyReleased(e);
     }  
 }

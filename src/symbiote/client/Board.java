@@ -4,12 +4,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import symbiote.Main;
-import symbiote.entity.EntityPlayer;
-import symbiote.entity.EntitySymbiote;
 
+@SuppressWarnings("serial")
 public class Board extends JPanel implements ActionListener {
     
     public Timer timer;
@@ -27,26 +26,17 @@ public class Board extends JPanel implements ActionListener {
         
         Graphics2D g = (Graphics2D) graphics;
         
-        if (Client.symbiote) {
-            EntitySymbiote player = EntitySymbiote.get();
-            if (player != null) {
-                offsetX = player.controlledEntity.getCenterX() - (Client.self.getWidth() / 2);
-                offsetY = player.controlledEntity.getCenterY() - (Client.self.getHeight() / 2);
-            }
-        } else {
-            EntityPlayer player = EntityPlayer.get(Client.name);
-            if (player != null) {
-                offsetX = player.getCenterX() - (Client.self.getWidth() / 2);
-                offsetY = player.getCenterY() - (Client.self.getHeight() / 2);
-            }
+        if (Client.focus != null) {
+            offsetX = Client.focus.getCenterX() - (Client.self.getWidth() / 2);
+            offsetY = Client.focus.getCenterY() - (Client.self.getHeight() / 2);
         }
-        g.translate(-offsetX, -offsetY);
         
-        Main.screen.tick();
-        Main.screen.draw(g);
+        g.translate(-offsetX, -offsetY);
+        g.fillRect(320, 320, 10, 10);
+        Client.screen.tick();
+        Client.screen.draw(g);
         
         graphics.dispose();
-        
     }
     
     @Override

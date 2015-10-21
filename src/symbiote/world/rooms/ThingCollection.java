@@ -2,14 +2,15 @@ package symbiote.world.rooms;
 
 import java.util.ArrayList;
 import java.util.List;
-import symbiote.Thing;
+
+import symbiote.entity.AbstractEntity;
 
 public class ThingCollection {
     
     public double x,y;
-    public List<Thing> things = new ArrayList<>();
+    public List<AbstractEntity> things = new ArrayList<>();
     
-    public ThingCollection(double x, double y, List<Thing> things) {
+    public ThingCollection(double x, double y, List<AbstractEntity> things) {
         this.x = x;
         this.y = y;
         this.things = new ArrayList<>(things);
@@ -21,7 +22,7 @@ public class ThingCollection {
     public void add(double x, double y) {
         this.x = x;
         this.y = y;
-        for (Thing t : things) {
+        for (AbstractEntity t : things) {
             t.x += x;
             t.y += y;
         }

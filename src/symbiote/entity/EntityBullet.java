@@ -1,51 +1,48 @@
 package symbiote.entity;
 
-import symbiote.resources.AnimationFactory;
-import symbiote.world.Solid;
+import symbiote.network.AbstractPacket;
+import symbiote.network.SPacketBullet;
 
-public class EntityBullet extends Entity {
-
+public class EntityBullet extends AbstractEntity {
     public String owner = null;
 
-    public EntityBullet(double x, double y, double angle, String owner) {
-        super(x, y);
+    public EntityBullet(int id, double x, double y, double angle, String owner) {
+        super(id, x, y);
         this.angle = angle;
         this.owner = owner;
         velocityDecrease = false;
         speed = 8;
         xVel = speed * Math.sin(Math.toRadians(angle));
         yVel = speed * -Math.cos(Math.toRadians(angle));
-        animation = AnimationFactory.start().addFrame("bullet.png").finish();
+        
+        this.width = 5;
+        this.height = 10;
     }
-
+    
     @Override
     public void tick() {
         super.tick();
+        
         if (x > 800 || x < 0 || y > 600 || y < 0) {
             destroy();
         }
     }
-
+    
+    /**
+     * Don't hit the owner
+     */
     @Override
-    public void collide(Solid s) {
-        destroy();
+    public boolean intersects(AbstractEntity t) {
+        if (t instanceof EntityPlayer) {
+            if (((EntityPlayer) t).name.equals(owner))
+                return false;
+        }
+        
+        return super.intersects(t);
     }
 
     @Override
-    public void collide(Entity e) {
-        boolean living = false;
-        boolean hit = true;
-        if (e instanceof LivingEntity) living = true;
-        if (e instanceof EntityPlayer) {
-            if (((EntityPlayer)e).name.equals(owner)) {
-                hit = false;
-            }
-        }
-        if (hit) {
-            if (living) {
-                ((LivingEntity)e).health -= 10;
-            }
-            destroy();
-        }
+    public AbstractPacket getPacket() {
+        return new SPacketBullet(id, x, y, angle, owner);
     }
 }

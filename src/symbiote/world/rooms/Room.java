@@ -7,7 +7,8 @@ import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import symbiote.Thing;
+
+import symbiote.entity.AbstractEntity;
 import symbiote.misc.Util;
 import symbiote.resources.ConfigFile;
 import symbiote.resources.ImageHandler;
@@ -35,7 +36,7 @@ public class Room extends ThingCollection {
                 if (Util.same(p.color, new Color(153, 217, 234))) { //Exit color
                     exitPixels.add(p);
                 } else {
-                    things.add(new Wall(p.x * gridUnit, p.y * gridUnit, "wallSheet.png"));
+                    things.add(new Wall(-1, p.x * gridUnit, p.y * gridUnit, "wallSheet.png"));
                 }
                 borderPixels.add(p);
             }
@@ -59,9 +60,9 @@ public class Room extends ThingCollection {
                     }
                 }
             }
-            List<Thing> exitSpots = new ArrayList<>();
+            List<AbstractEntity> exitSpots = new ArrayList<>();
             for (Pixel p : usedParts) {
-                exitSpots.add(new Thing(p.x * gridUnit, p.y * gridUnit, "exit.png"));
+                //TODO: exit exitSpots.add(new Thing(p.x * gridUnit, p.y * gridUnit, "exit.png"));
                 exitPixels.remove(p);
             }
             //System.out.println("making an exit");
