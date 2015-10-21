@@ -43,10 +43,6 @@ public class Main {
                     new String[]{"Client", "Server", "Close"}, 
                     "Client");
         
-        
-        //Packet Handler
-        addHandler(new PlayerHandler());
-
         if (result == 0) {
             try {
                 new Client();
