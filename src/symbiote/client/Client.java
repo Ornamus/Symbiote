@@ -3,7 +3,6 @@ package symbiote.client;
 import java.net.InetAddress;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
 import symbiote.Communicator;
 
 public class Client extends JFrame {

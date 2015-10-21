@@ -88,32 +88,7 @@ public class Communicator extends Thread {
                         ph.onPacket(message, array);
                     } else {
                         System.out.println("Got a '" + array[0] + "' packet that doesn't have a handler!");
-                        if (array[0].equals("player")) {
-                            if (server) {
-                                Server.broadcast(message, this);
-                            }
-                            EntityPlayer player = null;
-                            for (Thing t : new ArrayList<>(Main.screen.things)) {
-                                if (t instanceof EntityPlayer) {
-                                    EntityPlayer possiblePlayer = (EntityPlayer) t;
-                                    if (possiblePlayer.name.equals(array[1])) {
-                                        if (player == null) {
-                                            player = possiblePlayer;
-                                        } else {
-                                            possiblePlayer.destroy();
-                                        }
-                                    }
-                                }
-                            }
-                            if (player == null) {
-                                player = (EntityPlayer) Thing.create(new EntityPlayer(0, 0));
-                                player.name = array[1];
-                                player.playing = false;
-                            }
-                            player.x = Double.parseDouble(array[2]);
-                            player.y = Double.parseDouble(array[3]);
-                            player.angle = Double.parseDouble(array[4]);
-                        } else if (array[0].equals("symbiote")) {
+                        if (array[0].equals("symbiote")) {
                             if (server) {
                                 Server.broadcast(message, this);
                             }
@@ -162,11 +137,6 @@ public class Communicator extends Thread {
                                 if (!server) {
                                     AudioHandler.playSound("gun.wav");
                                 }
-                            }
-                        } else if (array[0].equals("disconnect")) {
-                            EntityPlayer p = EntityPlayer.get(array[1]);
-                            if (p != null) {
-                                p.destroy();
                             }
                         }
                     }
