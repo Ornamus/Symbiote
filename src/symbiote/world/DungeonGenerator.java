@@ -20,6 +20,12 @@ public class DungeonGenerator {
     private static List<AbstractEntity> things = new ArrayList<>();
     private static List<Room> rooms = new ArrayList<>();
     
+    /*
+    * TODO: I have no idea what is going on in here. Someone should just throw almost everything out and start over. The only thing
+    * worth salvaging is some of the code for defining rooms via a picture and config file, and feel free to kill that too if you can
+    * do it better!
+    */
+    
     /**
      * Generates a game world.
      * @return All the Things that make up the new game world.

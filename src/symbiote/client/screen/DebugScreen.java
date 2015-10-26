@@ -5,7 +5,7 @@ import symbiote.world.DungeonGenerator;
 
 public class DebugScreen extends Screen {
     
-    public DebugScreen() {        
+    public DebugScreen() {  
         for (AbstractEntity t : DungeonGenerator.generate()) {
             // TODO: add to client
 //            t.id = AbstractEntity.getNextID();            

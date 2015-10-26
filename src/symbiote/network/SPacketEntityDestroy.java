@@ -5,6 +5,11 @@ import java.io.ObjectOutputStream;
 import symbiote.client.Client;
 
 public class SPacketEntityDestroy extends AbstractPacket {
+    @Override
+    public String toString() {
+        return "SPacketEntityDestroy [id=" + eID + "]";
+    }
+    
     int eID;
     
     public SPacketEntityDestroy() {

@@ -6,6 +6,11 @@ import symbiote.entity.EntityPlayer;
 import symbiote.server.Server;
 
 public class CPacketDisconnect extends AbstractPacket {
+    @Override
+    public String toString() {
+        return "CPacketDisconnect [player=" + name + "]";
+    }
+    
     String name;
     
     public CPacketDisconnect() {
@@ -27,6 +32,7 @@ public class CPacketDisconnect extends AbstractPacket {
 
     @Override
     public void handle(Communicator comm) {
+        //TODO: Server is not properly deleting client data, still thinks they are connected and their entities exist (client's packets arriving after "disconnect"?)
         if (comm.getType() == Communicator.Type.SERVERSIDE) {
             EntityPlayer p = Server.getPlayer(name);
             if (p != null) {

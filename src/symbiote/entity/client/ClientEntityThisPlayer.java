@@ -2,24 +2,24 @@ package symbiote.entity.client;
 
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-
 import symbiote.Main;
-import symbiote.client.Board;
 import symbiote.client.Client;
+import symbiote.client.screen.SkillBar;
 import symbiote.entity.AbstractEntity;
 import symbiote.misc.Util;
 import symbiote.network.CPacketPosition;
-import symbiote.network.CPacketShoot;
-import symbiote.world.Wall;
 
 public class ClientEntityThisPlayer extends ClientEntityPlayer implements Interactable {
 
     private final List<String> keysPressed = new ArrayList<>();
+    public Point destination = null;
     
     public ClientEntityThisPlayer(int id, String name, double x, double y) {
         super(id, name, x, y);
+        destination = new Point((int) Math.round(x), (int) Math.round(y));
     }
     
     @Override
@@ -58,11 +58,17 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
         }
     }
     
-    @Override
-    public void mouseReleased(int x, int y) {
-        if ((playing && !symbioteControlled) || (Client.symbiote && symbioteControlled)) {
+    @Override public void mouseHeld(int x, int y, MouseEvent m) {
+        if (m.getButton() == MouseEvent.BUTTON3) {       
             Point p = Util.getMouseInWorld();
-            Client.communicator.sendMessage(new CPacketShoot(getCenterX(), getCenterY(), Util.angle(getCenterX(), getCenterY(), p.x, p.y), this.name));
+            destination = new Point(p.x, p.y);            
+        }
+    }
+    
+    @Override
+    public void mouseReleased(int x, int y, MouseEvent m) {
+        if (((playing && !symbioteControlled) || (Client.symbiote && symbioteControlled)) && m.getButton() == MouseEvent.BUTTON1) {
+            SkillBar.getSelected().use(this, Util.getMouseInWorld());
         }
     }
 
@@ -77,6 +83,18 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
         
         if ((playing && !symbioteControlled) || (Client.symbiote && symbioteControlled)) {
             if (Main.client) {
+                
+                //TODO: Decide whether or not this style of movement (MOBA) should be used or not            
+                //TODO: Figure out why the player jitters in place when at it's destination
+                //TODO: Am I crazy, or is going to the destination randomly inaccurate?
+                if (x != destination.x && y != destination.y) {
+                    double moveAngle = Util.angle(getCollisionBoxCenterX(), getCollisionBoxCenterY(), destination.x, destination.y);
+
+                    x += speed * Math.sin(Math.toRadians(moveAngle));
+                    y += speed * -Math.cos(Math.toRadians(moveAngle));
+                }
+
+                /*
                 if (keysPressed.contains("w")) {
                     yVel = -speed;
                 }
@@ -89,6 +107,8 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
                 if (keysPressed.contains("d")) {
                     xVel = speed;
                 }
+
+                //Disabled due to the new sprite not needing rotation
                 
                 Point p = Util.getMouseOnScreen();
                 if (p.x < Client.self.getWidth() && p.x > 0 && p.y < Client.self.getHeight() && p.y > 0) {
@@ -99,7 +119,7 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
                             angle = oldAngle;
                         }
                     }
-                }
+                }*/
                 
                 if (System.currentTimeMillis() - lastSend > 200 && (x != lastX || y != lastY || angle != lastAngle)) {
                     lastSend = System.currentTimeMillis();
@@ -114,6 +134,6 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
 
     @Override public void mouseEnter() {}
     @Override public void mouseLeave() {}
-    @Override public void mouseClicked(int x, int y) {}
+    @Override public void mouseClicked(int x, int y, MouseEvent m) {}
     @Override public void collide(AbstractEntity e) {}
 }

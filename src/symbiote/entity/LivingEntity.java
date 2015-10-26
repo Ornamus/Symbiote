@@ -16,6 +16,7 @@ public abstract class LivingEntity extends AbstractEntity {
         
         if (health < 0) {
             health = 0;
+            
             // TODO: destroy when health <= 0?
         }
     }

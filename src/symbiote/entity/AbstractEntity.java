@@ -1,5 +1,6 @@
 package symbiote.entity;
 
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
@@ -42,6 +43,7 @@ public abstract class AbstractEntity {
     public boolean velocityDecrease = true;
     
     public double angle = 0;
+    public double size = 1;
     
     public void tick() {
         physicsTick();
@@ -93,11 +95,21 @@ public abstract class AbstractEntity {
     }
 
     public double getCenterX() {
-        return x + (width / 2);
+        return x + ((width * size) / 2);
     }
     
     public double getCenterY() {
-        return y + (height / 2);
+        return y + ((height * size) / 2);
+    }
+    
+    public double getCollisionBoxCenterX() {
+        Rectangle box = getCollisionBox().getBounds();
+        return box.x + (box.width / 2);
+    }
+    
+    public double getCollisionBoxCenterY() {
+        Rectangle box = getCollisionBox().getBounds();
+        return box.y + (box.height / 2);
     }
     
     public void physicsTick() {

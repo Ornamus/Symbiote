@@ -2,12 +2,12 @@ package symbiote.entity.client;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-
 import symbiote.entity.EntityPlayer;
 import symbiote.resources.Animation;
 import symbiote.resources.AnimationFactory;
-import symbiote.resources.ImageHandler;
 import symbiote.misc.Util;
 
 public class ClientEntityPlayer extends EntityPlayer implements Drawable {
@@ -19,6 +19,7 @@ public class ClientEntityPlayer extends EntityPlayer implements Drawable {
     public ClientEntityPlayer(int id, String name, double x, double y) {
         super(id, name, x, y);
         animation = AnimationFactory.start().addFrame("body.png").loop(true).finish();
+        size = 2;
     }
     
     @Override
@@ -28,9 +29,16 @@ public class ClientEntityPlayer extends EntityPlayer implements Drawable {
     }
     
     @Override
+    public Shape getCollisionBox() {
+        //This hitbox is just the shadow at the person's feet, to give a correct feel of depth
+        return new Rectangle2D.Double(x, y + (21 * size), width * size, 4 * size);
+    }
+    
+    @Override
     public void draw(Graphics2D g) {
         if (image != null) {
-            ImageHandler.drawRotated(image, x, y, angle, g);
+            g.drawImage(image, Util.round(x), Util.round(y), Util.round(image.getWidth()*size), Util.round(image.getHeight()*size), null);
+            //ImageHandler.drawRotated(image, x, y, angle, g);
         }
         
         if (maxHealth > health) {

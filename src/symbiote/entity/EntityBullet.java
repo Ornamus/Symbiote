@@ -4,12 +4,12 @@ import symbiote.network.AbstractPacket;
 import symbiote.network.SPacketBullet;
 
 public class EntityBullet extends AbstractEntity {
-    public String owner = null;
+    public int ownerID = -1;
 
-    public EntityBullet(int id, double x, double y, double angle, String owner) {
+    public EntityBullet(int id, double x, double y, double angle, int oID) {
         super(id, x, y);
         this.angle = angle;
-        this.owner = owner;
+        this.ownerID = oID;
         velocityDecrease = false;
         speed = 8;
         xVel = speed * Math.sin(Math.toRadians(angle));
@@ -23,6 +23,7 @@ public class EntityBullet extends AbstractEntity {
     public void tick() {
         super.tick();
         
+        //TODO: figure out a better way of managing bullets instead of deleting them if off-screen
         if (x > 800 || x < 0 || y > 600 || y < 0) {
             destroy();
         }
@@ -33,9 +34,8 @@ public class EntityBullet extends AbstractEntity {
      */
     @Override
     public boolean intersects(AbstractEntity t) {
-        if (t instanceof EntityPlayer) {
-            if (((EntityPlayer) t).name.equals(owner))
-                return false;
+        if (t.id == ownerID) {
+            return false;
         }
         
         return super.intersects(t);
@@ -43,6 +43,6 @@ public class EntityBullet extends AbstractEntity {
 
     @Override
     public AbstractPacket getPacket() {
-        return new SPacketBullet(id, x, y, angle, owner);
+        return new SPacketBullet(id, x, y, angle, ownerID);
     }
 }

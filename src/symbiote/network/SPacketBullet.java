@@ -16,12 +16,12 @@ public class SPacketBullet extends SAbstractPacketEntity {
                 + getAngle() + "]";
     }
 
-    String owner;
+    int owner;
     
     public SPacketBullet() {
     }
     
-    public SPacketBullet(int id, double x, double y, double angle, String owner) {
+    public SPacketBullet(int id, double x, double y, double angle, int owner) {
         super(id, x, y, angle);
         this.owner = owner;
     }
@@ -30,14 +30,14 @@ public class SPacketBullet extends SAbstractPacketEntity {
     public void write(ObjectOutputStream out) throws Exception {
         super.write(out);
         
-        out.writeUTF(owner);
+        out.writeInt(owner);
     }
 
     @Override
     public void read(ObjectInputStream in) throws Exception {
         super.read(in);
         
-        owner = in.readUTF();
+        owner = in.readInt();
     }
 
     @Override

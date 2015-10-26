@@ -11,18 +11,18 @@ public class CPacketShoot extends AbstractPacket {
     @Override
     public String toString() {
         return "CPacketShoot [x=" + x + ", y=" + y + ", angle=" + angle
-                + ", owner=" + owner + "]";
+                + ", ownerID=" + owner + "]";
     }
     
     double x;
     double y;
     double angle;
-    String owner;
+    int owner;
     
     public CPacketShoot() {
     }
     
-    public CPacketShoot(double x, double y, double angle, String owner) {
+    public CPacketShoot(double x, double y, double angle, int owner) {
         super();
         this.x = x;
         this.y = y;
@@ -35,7 +35,7 @@ public class CPacketShoot extends AbstractPacket {
         out.writeDouble(x);
         out.writeDouble(y);
         out.writeDouble(angle);
-        out.writeUTF(owner);
+        out.writeInt(owner);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class CPacketShoot extends AbstractPacket {
         this.x = in.readDouble();
         this.y = in.readDouble();
         this.angle = in.readDouble();
-        this.owner = in.readUTF();
+        this.owner = in.readInt();
     }
 
     @Override

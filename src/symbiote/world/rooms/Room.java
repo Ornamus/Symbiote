@@ -1,6 +1,5 @@
 package symbiote.world.rooms;
 
-import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Area;
@@ -8,23 +7,20 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import symbiote.entity.AbstractEntity;
 import symbiote.misc.Util;
 import symbiote.resources.ConfigFile;
-import symbiote.resources.ImageHandler;
-import symbiote.resources.Pixel;
-import symbiote.world.Wall;
 
 public class Room extends ThingCollection {
     
     public static int gridUnit = 16;
     public List<Exit> exits = new ArrayList<>();
     public BufferedImage image;
-    private List<Pixel> borderPixels = new ArrayList<>();
+    //private List<Pixel> borderPixels = new ArrayList<>();
     public ConfigFile config;
     
     public Room(double x, double y, String name) {
         super(x, y, new ArrayList<>());
+        /*
         this.x = x;
         this.y = y;
         image = ImageHandler.getImage(name + ".png", getClass());
@@ -73,7 +69,7 @@ public class Room extends ThingCollection {
         
         //TODO Allign to grid, make it not laggy, draw behind everything else
         
-        /*
+        
         Area area = getArea(true);
         for (int dY = 0; dY < area.getBounds().height; dY += gridUnit) {
             for (int dX = 0; dX < area.getBounds().width; dX += gridUnit) {
@@ -84,7 +80,7 @@ public class Room extends ThingCollection {
             }
         }*/
     }
-    
+    /*
     public boolean atPoint(int x, int y, List<Pixel> pixels) {
         for (Pixel p : pixels) {
             if (p.x == x && p.y == y) {
@@ -92,7 +88,7 @@ public class Room extends ThingCollection {
             }
         }
         return false;
-    }
+    }*/
     
     public boolean intersects(Room r, boolean useBorder) {
         Area a = getArea(useBorder);
@@ -112,6 +108,7 @@ public class Room extends ThingCollection {
         for (int pY = excludeBorder ? 1 : 0; pY < image.getHeight() + (excludeBorder ? -1 : 0); pY++) {
             int startX = -1, endX = -1;
             for (int pX = 0; pX < image.getWidth(); pX++) {
+                /*
                 if (atPoint(pX, pY, borderPixels)) {
                     if (startX == -1) {
                         startX = pX;
@@ -120,7 +117,7 @@ public class Room extends ThingCollection {
                             endX = pX;
                     }
                     
-                }
+                }*/
             }
             Rectangle r = new Rectangle((startX * gridUnit) + Util.round(x) + decreaseAmount, (pY * gridUnit) + Util.round(y), (endX - startX + 1) * gridUnit - (decreaseAmount * 2), gridUnit);
             shapes.add(r);

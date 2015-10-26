@@ -2,11 +2,13 @@ package symbiote.entity.client;
 
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import symbiote.Main;
 import symbiote.client.Board;
 import symbiote.client.Client;
+import symbiote.client.screen.SkillBar;
 import symbiote.entity.AbstractEntity;
 import symbiote.entity.LivingEntity;
 import symbiote.misc.Util;
@@ -67,34 +69,13 @@ public class ClientEntityThisSymbiote extends ClientEntitySymbiote implements In
         if (k.getKeyCode() == KeyEvent.VK_D) {
             keysPressed.remove("d");
         }
-     
-        if (Main.client && playing) {
-            if (k.getKeyCode() == KeyEvent.VK_E) {
-                if (controlledEntity == this) {
-                    Point p = Util.getMouseInWorld();
-                    for (AbstractEntity t : Client.screen.thingMap.values()) {
-                        // TODO: complete controllable
-                        if (t instanceof LivingEntity && t.getCollisionBox().contains(p)) {
-                            // TODO: uncomment magnitude squared
-                            //if ((this.x - t.x)*(this.x - t.x) + (this.y - t.y)*(this.y - t.y) < CONTROLDISTANCE*CONTROLDISTANCE) {
-                                LivingEntity e = (LivingEntity) t;
-                                e.symbioteControlled = true;
-                                controlledEntity = e;
-                                Client.communicator.sendMessage(new CPacketSymbioteControl(e.name));
-                                break;
-                            //}
-                        }
-                    }
-                }
-            }
-
-            if (k.getKeyCode() == KeyEvent.VK_R) {
-                if (controlledEntity != this) {
-                    controlledEntity.symbioteControlled = false;
-                    controlledEntity = this;
-                    Client.communicator.sendMessage(new CPacketSymbioteControl(name));
-                }
-            }
+    }
+    
+    @Override
+    public void mouseReleased(int x, int y, MouseEvent m) {
+        //TODO: Allow symbiote to use skills if it's not controlling itself?
+        if (playing && controlledEntity == this && m.getButton() == MouseEvent.BUTTON1) {
+            SkillBar.getSelected().use(this, Util.getMouseInWorld());
         }
     }
 
@@ -144,7 +125,7 @@ public class ClientEntityThisSymbiote extends ClientEntitySymbiote implements In
 
     @Override public void mouseEnter() {}
     @Override public void mouseLeave() {}
-    @Override public void mouseClicked(int x, int y) {}
-    @Override public void mouseReleased(int x, int y) {}
+    @Override public void mouseClicked(int x, int y, MouseEvent m) {}
+    @Override public void mouseHeld(int x, int y, MouseEvent m) {}
     @Override public void collide(AbstractEntity t) {}
 }

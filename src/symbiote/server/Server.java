@@ -11,11 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import symbiote.entity.AbstractEntity;
 import symbiote.entity.EntityPlayer;
 import symbiote.entity.EntitySymbiote;
-import symbiote.entity.LivingEntity;
 import symbiote.network.AbstractPacket;
 import symbiote.network.Communicator;
 import symbiote.network.SPacketPing;

@@ -26,7 +26,7 @@ public class Client extends JFrame {
         
         setSize(800, 600);
         
-        String ip = JOptionPane.showInputDialog("Please enter server address", "73.21.249.165:9001");
+        String ip = JOptionPane.showInputDialog("Please enter server address", "localhost");
         
         if (ip == null)
             throw new Exception("No IP provided");

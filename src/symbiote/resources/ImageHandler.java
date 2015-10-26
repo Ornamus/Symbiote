@@ -1,5 +1,6 @@
 package symbiote.resources;
 
+import java.awt.Graphics;
 import symbiote.misc.Util;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -33,27 +34,29 @@ public class ImageHandler {
         return bimage;
     }
 
-    public static List<Pixel> getPixels(BufferedImage i) {
-        List<Pixel> pixels = new ArrayList<>();
-        for (int y = 0; y < i.getHeight(); y++) {
-            for (int x = 0; x < i.getWidth(); x++) {
-                int clr = i.getRGB(x, y);
-                int red = (clr & 0x00ff0000) >> 16;
-                int green = (clr & 0x0000ff00) >> 8;
-                int blue = clr & 0x000000ff;              
-                pixels.add(new Pixel(x, y, red, green, blue));
-            }
-        }
-        return pixels;
+    public static BufferedImage copy(BufferedImage source) {
+        BufferedImage b = new BufferedImage(source.getWidth(), source.getHeight(), source.getType());
+        Graphics g = b.getGraphics();
+        g.drawImage(source, 0, 0, null);
+        g.dispose();
+        return b;
     }
-    
-    public static Pixel getPixel(BufferedImage i, int x, int y) {
-        for (Pixel p : getPixels(i)) {
-            if (p.x == x && p.y == y) {
-                return p;
-            }
-        }
-        return null;
+
+    public static BufferedImage flipImage(BufferedImage bi) {
+        BufferedImage flipped = new BufferedImage(
+                bi.getWidth(),
+                bi.getHeight(),
+                bi.getType());
+        AffineTransform tran = AffineTransform.getTranslateInstance(bi.getWidth(), 0);
+        AffineTransform flip = AffineTransform.getScaleInstance(-1d, 1d);
+        tran.concatenate(flip);
+
+        Graphics2D g = flipped.createGraphics();
+        g.setTransform(tran);
+        g.drawImage(bi, 0, 0, null);
+        g.dispose();
+
+        return flipped;
     }
     
     public static void drawRotated(BufferedImage i, double x, double y, double angle, Graphics2D g) {
@@ -66,4 +69,12 @@ public class ImageHandler {
         
         g.setTransform(old);
     }
+    
+    /*
+    int r = // red component 0...255
+    int g = // green component 0...255
+    int b = // blue component 0...255
+    int col = (r << 16) | (g << 8) | b;
+    img.setRGB(x, y, col);
+    */
 }
