@@ -17,6 +17,11 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
     private final List<String> keysPressed = new ArrayList<>();
     public Point destination = null;
     
+    /**
+     * The distance the player can be from the destination point before pathing is stopped.
+     */
+    private static float DISTANCE_FROM_DESTINATION = 2;
+    
     public ClientEntityThisPlayer(int id, String name, double x, double y) {
         super(id, name, x, y);
         destination = new Point((int) Math.round(x), (int) Math.round(y));
@@ -85,13 +90,16 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
             if (Main.client) {
                 
                 //TODO: Decide whether or not this style of movement (MOBA) should be used or not            
-                //TODO: Figure out why the player jitters in place when at it's destination
                 //TODO: Am I crazy, or is going to the destination randomly inaccurate?
-                if (x != destination.x && y != destination.y) {
+                double distanceToDestination = Math.sqrt(
+                        Math.pow(getCollisionBoxCenterX() - destination.x, 2) + 
+                        Math.pow(getCollisionBoxCenterY() - destination.y, 2));
+                
+                if (distanceToDestination > DISTANCE_FROM_DESTINATION) {
                     double moveAngle = Util.angle(getCollisionBoxCenterX(), getCollisionBoxCenterY(), destination.x, destination.y);
 
-                    x += speed * Math.sin(Math.toRadians(moveAngle));
-                    y += speed * -Math.cos(Math.toRadians(moveAngle));
+                    x += Math.min(speed, distanceToDestination) * Math.sin(Math.toRadians(moveAngle));
+                    y += Math.min(speed, distanceToDestination) * -Math.cos(Math.toRadians(moveAngle));
                 }
 
                 /*

@@ -2,9 +2,12 @@ package symbiote.entity.client;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+
+import symbiote.client.Client;
 import symbiote.entity.EntityPlayer;
 import symbiote.resources.Animation;
 import symbiote.resources.AnimationFactory;
@@ -19,7 +22,6 @@ public class ClientEntityPlayer extends EntityPlayer implements Drawable {
     public ClientEntityPlayer(int id, String name, double x, double y) {
         super(id, name, x, y);
         animation = AnimationFactory.start().addFrame("body.png").loop(true).finish();
-        size = 2;
     }
     
     @Override
@@ -30,8 +32,8 @@ public class ClientEntityPlayer extends EntityPlayer implements Drawable {
     
     @Override
     public Shape getCollisionBox() {
-        //This hitbox is just the shadow at the person's feet, to give a correct feel of depth
-        return new Rectangle2D.Double(x, y + (21 * size), width * size, 4 * size);
+        // This hitbox is just the shadow at the person's feet (1/3rd the person's height), to give a correct feel of depth
+        return new Rectangle2D.Double(x, y + height * (2/3d), width, height / 3d);
     }
     
     @Override
@@ -48,6 +50,12 @@ public class ClientEntityPlayer extends EntityPlayer implements Drawable {
         BufferedImage frame = animation.getCurrentFrame(false);
         int textWidth = g.getFontMetrics().stringWidth(name);
         g.drawString(name, Util.round((x + (frame.getWidth() / 2) - (textWidth / 2))), Util.round((y - (frame.getHeight() / 2))));
+        
+        if (Client.DEBUG) {
+            Rectangle collisionBox = this.getCollisionBox().getBounds();
+            g.setColor(Color.RED);
+            g.drawRect(collisionBox.x, collisionBox.y, collisionBox.width, collisionBox.height);
+        }
     }
     
     /**

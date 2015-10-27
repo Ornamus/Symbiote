@@ -2,9 +2,11 @@ package symbiote;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import symbiote.client.Client;
+
 import javax.swing.JOptionPane;
 
 import symbiote.network.*;
@@ -60,11 +62,17 @@ public class Main {
     }
     
     public static void main(String[] args) {
+        List<String> arguments = Arrays.asList(args);
+        
         int type = -1;
-        if (Arrays.asList(args).contains("client"))
+        if (arguments.contains("client"))
             type = 0;
-        else if (Arrays.asList(args).contains("server"))
+        else if (arguments.contains("server"))
             type = 1;
+        
+        if (arguments.contains("debug")) {
+            Client.DEBUG = true;
+        }
         
         new Main(type);
     }

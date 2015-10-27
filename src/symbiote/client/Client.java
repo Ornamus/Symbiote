@@ -12,6 +12,11 @@ import symbiote.network.Communicator;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {
+    /**
+     * Whether DEBUG rendering should be shown by renderers.
+     */
+    public static boolean DEBUG = false;
+    
     public static Client self;
     public static Board board;
     public static Communicator communicator = null;
