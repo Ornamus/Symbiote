@@ -6,7 +6,6 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-
 import symbiote.client.Client;
 import symbiote.entity.EntityPlayer;
 import symbiote.resources.Animation;

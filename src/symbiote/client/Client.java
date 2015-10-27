@@ -4,6 +4,7 @@ import java.net.InetAddress;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import symbiote.client.screen.DebugScreen;
 import symbiote.client.screen.Screen;
 import symbiote.entity.AbstractEntity;
 import symbiote.network.CPacketDisconnect;
@@ -32,8 +33,6 @@ public class Client extends JFrame {
     
     public static Screen screen;
     public Client() throws Exception {
-        Client.screen = new Screen();
-        
         setSize(800, 600);
         
         String ip = JOptionPane.showInputDialog("Please enter server address", "localhost");
@@ -53,7 +52,7 @@ public class Client extends JFrame {
         // create address, confirm is reachable
         InetAddress addr = InetAddress.getByName(ip);
         if (!addr.isReachable(5000))
-            throw new Exception(addr + " is not reachable");
+            throw new Exception(addr + " is not reachable!");
 
         communicator = new ClientCommunicator(addr, port);
         communicator.start();

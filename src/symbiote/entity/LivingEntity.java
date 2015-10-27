@@ -6,6 +6,8 @@ public abstract class LivingEntity extends AbstractEntity {
     public String name = "";
     public boolean symbioteControlled = false;
     
+    //TODO: Make sure health is always synced up between the server and clients
+    
     public LivingEntity(int id, double x, double y) {
         super(id, x, y);
     }
@@ -17,7 +19,7 @@ public abstract class LivingEntity extends AbstractEntity {
         if (health < 0) {
             health = 0;
             
-            // TODO: destroy when health <= 0?
+            // TODO: create dead body when health < 0
         }
     }
 }

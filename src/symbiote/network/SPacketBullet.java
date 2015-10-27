@@ -2,11 +2,9 @@ package symbiote.network;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
 import symbiote.client.Client;
 import symbiote.entity.client.ClientEntityBullet;
 import symbiote.network.Communicator.Type;
-import symbiote.resources.AudioHandler;
 
 public class SPacketBullet extends SAbstractPacketEntity {
     @Override
@@ -50,7 +48,10 @@ public class SPacketBullet extends SAbstractPacketEntity {
                 System.out.println("Already has id!");
             }
             Client.screen.thingMap.put(this.getId(), bullet);
-            AudioHandler.playSound("gun.wav");
+            
+            //Keep this god-awful sound commented out until we get a new sound that isn't COMPLETELY HORRIFIC
+            //AudioHandler.playSound("gun.wav");
+            
         }
     }
 

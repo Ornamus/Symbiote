@@ -10,13 +10,11 @@ import symbiote.client.Board;
 import symbiote.client.Client;
 import symbiote.client.screen.SkillBar;
 import symbiote.entity.AbstractEntity;
-import symbiote.entity.LivingEntity;
 import symbiote.misc.Util;
 import symbiote.network.AbstractPacket;
 import symbiote.network.CPacketPosition;
-import symbiote.network.CPacketSymbioteControl;
 import symbiote.network.SPacketSymbiote;
-import symbiote.world.Wall;
+import symbiote.world.Block;
 
 public class ClientEntityThisSymbiote extends ClientEntitySymbiote implements Interactable {
     /**
@@ -107,7 +105,7 @@ public class ClientEntityThisSymbiote extends ClientEntitySymbiote implements In
                 double oldAngle = angle;
                 angle = Util.angle(getCenterX(), getCenterY(), p.x + Board.offsetX, p.y + Board.offsetY);
                 for (AbstractEntity t : Client.screen.thingMap.values()) {
-                    if (t instanceof Wall && intersects(t)) {
+                    if (t instanceof Block && intersects(t)) {
                         angle = oldAngle;
                     }
                 }

@@ -3,7 +3,6 @@ package symbiote.entity.client;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-
 import symbiote.entity.EntitySymbiote;
 import symbiote.misc.Util;
 import symbiote.resources.Animation;

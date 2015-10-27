@@ -7,11 +7,11 @@ import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
-
 import symbiote.Main;
 import symbiote.client.Client;
 import symbiote.network.AbstractPacket;
 import symbiote.server.Server;
+import symbiote.world.Block;
 
 public abstract class AbstractEntity {
     public static int getNextID() {
@@ -43,7 +43,7 @@ public abstract class AbstractEntity {
     public boolean velocityDecrease = true;
     
     public double angle = 0;
-    public double size = 1;
+    public double size = 1; //TODO: Phase this out because it's useless if you manually handle width and height...?
     
     public void tick() {
         physicsTick();
@@ -151,18 +151,20 @@ public abstract class AbstractEntity {
                     t.collide(this);
                     collisions.add(t);
                 }
-                while (intersects(t)) {
-                    if (adjustX) {
-                        if (xVel > 0) {
-                            x--;
+                if (t instanceof Block) {
+                    while (intersects(t)) {
+                        if (adjustX) {
+                            if (xVel > 0) {
+                                x--;
+                            } else {
+                                x++;
+                            }
                         } else {
-                            x++;
-                        }
-                    } else {
-                        if (yVel > 0) {
-                            y--;
-                        } else {
-                            y++;
+                            if (yVel > 0) {
+                                y--;
+                            } else {
+                                y++;
+                            }
                         }
                     }
                 }

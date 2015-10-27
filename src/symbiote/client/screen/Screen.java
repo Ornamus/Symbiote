@@ -2,10 +2,9 @@ package symbiote.client.screen;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import symbiote.client.InputListener;
@@ -32,10 +31,26 @@ public class Screen {
         }
     }
     
+    //TODO: Draw entities from top to bottom more efficiently?
     public void draw(Graphics2D g) {
+        double highestY = 0;
+        double lowestY = Integer.MAX_VALUE;
         for (AbstractEntity t : thingMap.values()) {
-            if (t instanceof Drawable)
-                ((Drawable) t).draw(g);
+            if (t.y + t.height > highestY) {
+                highestY = t.y + t.height;
+            }
+            if (t.y < lowestY) {
+                lowestY = t.y;
+            }
+        }
+        highestY++;
+        lowestY--;
+        for (double i = lowestY; i <= highestY; i++) {
+            for (AbstractEntity t : thingMap.values()) {
+                if (t instanceof Drawable && Util.round(t.y + t.height) == Util.round(i)) {
+                    ((Drawable) t).draw(g);
+                }
+            }
         }
     }
     

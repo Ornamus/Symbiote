@@ -5,10 +5,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-
 import symbiote.Main;
 import symbiote.client.Board;
 import symbiote.client.Client;
+import symbiote.client.Skill;
 import symbiote.client.screen.SkillBar;
 import symbiote.entity.AbstractEntity;
 import symbiote.misc.Util;
@@ -75,7 +75,10 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
     @Override
     public void mouseReleased(int x, int y, MouseEvent m) {
         if (((playing && !symbioteControlled) || (Client.symbiote && symbioteControlled)) && m.getButton() == MouseEvent.BUTTON1) {
-            SkillBar.getSelected().use(this, Util.getMouseInWorld());
+            Skill k = SkillBar.getSelected();
+            if (k != null) {
+                k.use(this, Util.getMouseInWorld());
+            }
         }
     }
 
@@ -100,8 +103,13 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
                 if (distanceToDestination > DISTANCE_FROM_DESTINATION) {
                     double moveAngle = Util.angle(getCollisionBoxCenterX(), getCollisionBoxCenterY(), destination.x, destination.y);
 
-                    x += Math.min(speed, distanceToDestination) * Math.sin(Math.toRadians(moveAngle));
-                    y += Math.min(speed, distanceToDestination) * -Math.cos(Math.toRadians(moveAngle));
+                    xVel = Math.min(speed, distanceToDestination) * Math.sin(Math.toRadians(moveAngle));
+                    yVel = Math.min(speed, distanceToDestination) * -Math.cos(Math.toRadians(moveAngle));
+                } else {
+                    if (Math.abs(xVel) <= speed && Math.abs(yVel) <= speed) {
+                        xVel = 0;
+                        yVel = 0;
+                    }
                 }
 
                 /*

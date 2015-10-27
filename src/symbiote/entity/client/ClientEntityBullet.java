@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import symbiote.entity.AbstractEntity;
 import symbiote.entity.EntityBullet;
-import symbiote.entity.EntityPlayer;
 import symbiote.entity.LivingEntity;
 import symbiote.resources.Animation;
 import symbiote.resources.AnimationFactory;
