@@ -5,7 +5,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+
 import symbiote.Main;
+import symbiote.client.Board;
 import symbiote.client.Client;
 import symbiote.client.screen.SkillBar;
 import symbiote.entity.AbstractEntity;
@@ -129,7 +131,10 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
                     }
                 }*/
                 
-                if (System.currentTimeMillis() - lastSend > 200 && (x != lastX || y != lastY || angle != lastAngle)) {
+                Point p = Util.getMouseOnScreen();
+                angle = Util.angle(getCenterX(), getCenterY(), p.x + Board.offsetX, p.y + Board.offsetY);
+                
+                if (System.currentTimeMillis() - lastSend > Client.PACKET_SEND_RATE && (x != lastX || y != lastY || angle != lastAngle)) {
                     lastSend = System.currentTimeMillis();
                     Client.communicator.sendMessage(new CPacketPosition(this.id, x, y, angle));
                     lastX = x;

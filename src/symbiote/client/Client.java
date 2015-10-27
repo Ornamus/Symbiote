@@ -13,6 +13,11 @@ import symbiote.network.Communicator;
 @SuppressWarnings("serial")
 public class Client extends JFrame {
     /**
+     * Number of milliseconds that should elapse before sending an update packet. (ie position update packet)
+     */
+    public static final long PACKET_SEND_RATE = 200;
+
+    /**
      * Whether DEBUG rendering should be shown by renderers.
      */
     public static boolean DEBUG = false;

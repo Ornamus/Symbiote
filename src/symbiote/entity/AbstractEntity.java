@@ -169,4 +169,16 @@ public abstract class AbstractEntity {
             }
         }
     }
+
+    /**
+     * Sets the position and angle of this entity.
+     * @param x
+     * @param y
+     * @param angle
+     */
+    public void setPositionAndAngle(double x, double y, double angle) {
+        this.x = x;
+        this.y = y;
+        this.angle = angle;
+    }
 }

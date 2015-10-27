@@ -62,9 +62,7 @@ public class CPacketPosition extends AbstractPacket {
         }
         
         if (p != null) {
-            p.x = this.x;
-            p.y = this.y;
-            p.angle = this.angle;
+            p.setPositionAndAngle(this.x, this.y, this.angle);
         }
     }
 

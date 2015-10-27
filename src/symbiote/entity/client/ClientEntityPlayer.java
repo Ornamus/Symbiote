@@ -24,6 +24,20 @@ public class ClientEntityPlayer extends EntityPlayer implements Drawable {
         animation = AnimationFactory.start().addFrame("body.png").loop(true).finish();
     }
     
+    double lastX = 0;
+    double lastY = 0;
+    long lastPacketUpdate;
+    
+    @Override
+    public void setPositionAndAngle(double x, double y, double angle) {
+        // inb4 update
+        this.lastX = this.x;
+        this.lastY = this.y;
+        this.lastPacketUpdate = System.currentTimeMillis();
+        
+        super.setPositionAndAngle(x, y, angle);
+    }
+    
     @Override
     public void tick() {
         super.tick();
@@ -38,23 +52,42 @@ public class ClientEntityPlayer extends EntityPlayer implements Drawable {
     
     @Override
     public void draw(Graphics2D g) {
+        double a = ((double) System.currentTimeMillis() - lastPacketUpdate) / (double) Client.PACKET_SEND_RATE;
+        double lerpX = Util.lerp(this.lastX, this.x, a),
+                lerpY = Util.lerp(this.lastY, this.y, a);
+        
         if (image != null) {
-            g.drawImage(image, Util.round(x), Util.round(y), Util.round(image.getWidth()*size), Util.round(image.getHeight()*size), null);
-            //ImageHandler.drawRotated(image, x, y, angle, g);
+            // first maps negative angles to 0-360, 'left' is >=180 in clockwise degrees. 
+            boolean facingLeft = (angle + 360) % 360 >= 180;
+            
+            // if facing right, flip the image
+            g.drawImage(image, 
+                    Util.round(lerpX) + (int) (facingLeft ? 0 : image.getWidth() * size), 
+                    Util.round(lerpY), 
+                    Util.round(image.getWidth() * size) * (facingLeft ? 1 : -1), 
+                    Util.round(image.getHeight() * size), 
+                    null);
         }
         
         if (maxHealth > health) {
-            drawHealth(x, y - 42, g);
+            drawHealth(lerpX, lerpY - 42, g);
         }
         
         BufferedImage frame = animation.getCurrentFrame(false);
         int textWidth = g.getFontMetrics().stringWidth(name);
-        g.drawString(name, Util.round((x + (frame.getWidth() / 2) - (textWidth / 2))), Util.round((y - (frame.getHeight() / 2))));
+        g.drawString(name, Util.round((lerpX + (frame.getWidth() / 2) - (textWidth / 2))), Util.round((lerpY - (frame.getHeight() / 2))));
         
         if (Client.DEBUG) {
             Rectangle collisionBox = this.getCollisionBox().getBounds();
             g.setColor(Color.RED);
             g.drawRect(collisionBox.x, collisionBox.y, collisionBox.width, collisionBox.height);
+            
+            g.setColor(Color.BLUE);
+            g.drawLine(
+                    (int) (collisionBox.getCenterX()),
+                    (int) (collisionBox.getCenterY()), 
+                    (int) (collisionBox.getCenterX() + 30 * Math.sin(Math.toRadians(angle))), 
+                    (int) (collisionBox.getCenterY() + -30 * Math.cos(Math.toRadians(angle))));
         }
     }
     

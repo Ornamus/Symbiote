@@ -21,6 +21,28 @@ public class Util {
     }
     
     /**
+     * A linear interpolation, which doesn't check the bounds of the 'a' parameter.
+     * @param start The lowest value at a=0
+     * @param end The highest value at a=1
+     * @param a The interpolation between start and end, from (0-1) inclusive 
+     * @return The interpolated value
+     */
+    public static double unboundedLerp(double start, double end, double a) {
+        return (1 - a) * start + a * end;
+    }
+    
+    /**
+     * A linear interpolation, which constraints the bounds of the 'a' parameter to between 0-1 inclusive.
+     * @param start The lowest value at a=0
+     * @param end The highest value at a=1
+     * @param a The interpolation between start and end, from (0-1) inclusive 
+     * @return The interpolated value
+     */
+    public static double lerp(double start, double end, double a) {
+        return unboundedLerp(start, end, Math.min(Math.max(a, 0), 1));
+    }
+    
+    /**
      * Gets the mouse's location on-screen (not relative to game objects, just the JPanel itself)
      * @return The mouse's location on-screen.
      */
