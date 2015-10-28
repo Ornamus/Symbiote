@@ -18,9 +18,7 @@ public abstract class Skill {
     
     //TODO: Effects that make it obvious what skill is selected
     
-    //TODO: Figure out why bullets are spawning out of different positions around the feet instead of the chest area
-    //TODO: Bullets aren't spawning at all now? What?
-    public static Skill SHOOT_BULLET = new Skill("Shoot", 2, "skill_gun"){
+    public static Skill SHOOT_BULLET = new Skill("Shoot", 1, "skill_gun"){
         @Override
         public void code(AbstractEntity e, Point p) {
             Point m = Util.getMouseInWorld();
@@ -41,7 +39,7 @@ public abstract class Skill {
                 if (sim.controlledEntity == sim) {
                     for (AbstractEntity t : Client.screen.thingMap.values()) {
                         // TODO: complete controllable
-                        if (t instanceof LivingEntity && t.getCollisionBox().contains(p)) {
+                        if (t instanceof LivingEntity && t.getBounds().contains(p)) {
                         // TODO: uncomment magnitude squared
                             //if ((this.x - t.x)*(this.x - t.x) + (this.y - t.y)*(this.y - t.y) < CONTROLDISTANCE*CONTROLDISTANCE) {
                             LivingEntity e = (LivingEntity) t;

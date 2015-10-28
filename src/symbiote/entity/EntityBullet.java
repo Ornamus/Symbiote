@@ -1,10 +1,14 @@
 package symbiote.entity;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
 import symbiote.network.AbstractPacket;
 import symbiote.network.SPacketBullet;
 
 public class EntityBullet extends AbstractEntity {
     public int ownerID = -1;
+    Timer deathTimer;
 
     public EntityBullet(int id, double x, double y, double angle, int oID) {
         super(id, x, y);
@@ -17,16 +21,13 @@ public class EntityBullet extends AbstractEntity {
         
         this.width = 5;
         this.height = 10;
-    }
-    
-    @Override
-    public void tick() {
-        super.tick();
         
-        //TODO: figure out a better way of managing bullets instead of deleting them if off-screen
-        if (x > 800 || x < 0 || y > 600 || y < 0) {
-            destroy();
-        }
+        deathTimer = new Timer(10000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                destroy();
+            }        
+        });
     }
     
     /**

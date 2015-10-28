@@ -14,8 +14,10 @@ import java.util.logging.Logger;
 import symbiote.entity.AbstractEntity;
 import symbiote.entity.EntityPlayer;
 import symbiote.entity.EntitySymbiote;
+import symbiote.entity.LivingEntity;
 import symbiote.network.AbstractPacket;
 import symbiote.network.Communicator;
+import symbiote.network.SPacketEntityDestroy;
 import symbiote.network.SPacketPing;
 import symbiote.network.ServerCommunicator;
 
@@ -51,8 +53,11 @@ public class Server extends Thread {
      */
     public void execute(String cmd) {
         gui.log("> " + cmd);
-        
-        if (cmd.startsWith("/echo ")) {
+
+        if (cmd.startsWith("/kick ")) {
+            String name = cmd.substring(cmd.indexOf(' ') + 1);
+            if (!handlePlayerDisconnect(name, " was kicked.")) gui.log("\"" + name + "\" does not exist!");           
+        } else if (cmd.startsWith("/echo ")) {
             String msg = cmd.substring(cmd.indexOf(' ') + 1);
             gui.log(msg);
             System.out.println(msg);
@@ -143,7 +148,7 @@ public class Server extends Thread {
     }
     
     /**
-     * Sends a message to every client except for c.
+     * Sends a message to every client except for 'excluded'.
      */
     public static void broadcastExcept(AbstractPacket message, Communicator excluded) {
         for (Communicator client : clients) {
@@ -175,5 +180,33 @@ public class Server extends Thread {
             }
         }
         return null;
+    }
+
+    public static boolean handlePlayerDisconnect(String name, String message) {
+        Communicator client = null;
+        for (Communicator c : clients) {
+            if (c.name.equalsIgnoreCase(name)) {
+                client = c;
+                break;
+            }
+        }
+        if (client != null) {
+            LivingEntity e = Server.getPlayer(name);
+            if (e == null) {
+                e = Server.getSymbiote();
+            }
+            if (e.name.equalsIgnoreCase(name)) {
+                Server.broadcast(new SPacketEntityDestroy(e.id));
+                e.destroy();
+            }
+
+            Server.clients.remove(client);
+            Server.gui.log(name + message);
+            Server.gui.refreshClients();
+            return true;
+        } else {
+            System.out.println("[ERROR] Told to disconnect client \"" + name + "\" but they don't exist!");
+            return false;
+        }
     }
 }

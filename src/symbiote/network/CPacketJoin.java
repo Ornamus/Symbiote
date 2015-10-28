@@ -52,7 +52,7 @@ public class CPacketJoin extends AbstractPacket {
                 
                 int id = AbstractEntity.getNextID();
                 if (symb) { // TODO: this whole block could be done smarter
-                    EntitySymbiote entity = new EntitySymbiote(id, 320, 320);
+                    EntitySymbiote entity = new EntitySymbiote(id, comm.name, 320, 320);
                     Server.broadcastExcept(entity.getPacket(), comm);
                     
                     SPacketSymbiote yourself = ((SPacketSymbiote) entity.getPacket());

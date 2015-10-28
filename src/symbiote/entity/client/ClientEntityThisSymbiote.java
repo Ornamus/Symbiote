@@ -1,20 +1,18 @@
 package symbiote.entity.client;
 
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import symbiote.Main;
-import symbiote.client.Board;
 import symbiote.client.Client;
+import symbiote.client.Skill;
 import symbiote.client.screen.SkillBar;
 import symbiote.entity.AbstractEntity;
 import symbiote.misc.Util;
 import symbiote.network.AbstractPacket;
 import symbiote.network.CPacketPosition;
 import symbiote.network.SPacketSymbiote;
-import symbiote.world.Block;
 
 public class ClientEntityThisSymbiote extends ClientEntitySymbiote implements Interactable {
     /**
@@ -24,13 +22,13 @@ public class ClientEntityThisSymbiote extends ClientEntitySymbiote implements In
     
     private final List<String> keysPressed = new ArrayList<>();
     
-    public ClientEntityThisSymbiote(int id, double x, double y) {
-        super(id, x, y);
+    public ClientEntityThisSymbiote(int id, String name, double x, double y) {
+        super(id, name, x, y);
     }
     
     @Override
     public AbstractPacket getPacket() {
-        return new SPacketSymbiote(id, x, y, angle, false, true);
+        return new SPacketSymbiote(id, name, x, y, angle, false, true);
     }
     
     @Override
@@ -71,9 +69,11 @@ public class ClientEntityThisSymbiote extends ClientEntitySymbiote implements In
     
     @Override
     public void mouseReleased(int x, int y, MouseEvent m) {
-        //TODO: Allow symbiote to use skills if it's not controlling itself?
-        if (playing && controlledEntity == this && m.getButton() == MouseEvent.BUTTON1) {
-            SkillBar.getSelected().use(this, Util.getMouseInWorld());
+        if (playing && m.getButton() == MouseEvent.BUTTON1) {
+            Skill k = SkillBar.getSelected();
+            if (k != null) {
+                k.use(this, Util.getMouseInWorld());
+            }
         }
     }
 
@@ -98,17 +98,6 @@ public class ClientEntityThisSymbiote extends ClientEntitySymbiote implements In
             }
             if (keysPressed.contains("d")) {
                 xVel = speed;
-            }
-            
-            Point p = Util.getMouseOnScreen();
-            if (p.x < Client.self.getWidth() && p.x > 0 && p.y < Client.self.getHeight() && p.y > 0) {
-                double oldAngle = angle;
-                angle = Util.angle(getCenterX(), getCenterY(), p.x + Board.offsetX, p.y + Board.offsetY);
-                for (AbstractEntity t : Client.screen.thingMap.values()) {
-                    if (t instanceof Block && intersects(t)) {
-                        angle = oldAngle;
-                    }
-                }
             }
             
             if (System.currentTimeMillis() - lastSend > 200 && (x != lastX || y != lastY || angle != lastAngle)) {

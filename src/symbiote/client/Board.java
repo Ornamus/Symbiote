@@ -44,8 +44,10 @@ public class Board extends JPanel implements ActionListener {
         
         g.translate(-offsetX, -offsetY);
         g.fillRect(320, 320, 10, 10);
-        Client.screen.tick();
-        Client.screen.draw(g);
+        if (Client.screen != null) {
+            Client.screen.tick();
+            Client.screen.draw(g);
+        }
         
         g.setTransform(oldXForm);
         

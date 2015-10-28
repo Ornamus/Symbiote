@@ -95,7 +95,6 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
             if (Main.client) {
                 
                 //TODO: Decide whether or not this style of movement (MOBA) should be used or not            
-                //TODO: Am I crazy, or is going to the destination randomly inaccurate?
                 double distanceToDestination = Math.sqrt(
                         Math.pow(getCollisionBoxCenterX() - destination.x, 2) + 
                         Math.pow(getCollisionBoxCenterY() - destination.y, 2));
@@ -146,7 +145,7 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
                     lastSend = System.currentTimeMillis();
                     Client.communicator.sendMessage(new CPacketPosition(this.id, x, y, angle));
                     lastX = x;
-                    lastY = y;
+                    lastY = y;   
                     lastAngle = angle;
                 }
             }

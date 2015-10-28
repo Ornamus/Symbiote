@@ -1,15 +1,18 @@
 package symbiote.client.screen;
 
-import symbiote.world.Block;
+import symbiote.entity.AbstractEntity;
+import symbiote.world.WorldUtil;
 
 public class DebugScreen extends Screen {
     
     public DebugScreen() {  
-        //TODO: Coordinate with the server on IDs so that the blocks don't get overridden
-        String[] blocks = {"WallTop", "WallTop", "WallTransition", "WallFront", "WallFront"};
-        for (int i=0;i<5;i++) {
-            Block b = new Block(999 + i, 20, 50 + (i * 32), blocks[i]);
-            thingMap.put(999 + i, b);
+        //TODO: Server tells client what blocks should exist and what their IDs are
+        
+        for (AbstractEntity e : WorldUtil.createWall(20, 100, 6, 3)) {
+            thingMap.put(e.id, e);
+        }
+        for (AbstractEntity e : WorldUtil.createFloor(-12, 100-(32*4), 8, 8)) {            
+            thingMap.put(e.id, e);
         }
     }
 }

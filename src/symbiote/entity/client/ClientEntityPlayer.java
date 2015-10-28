@@ -20,7 +20,33 @@ public class ClientEntityPlayer extends EntityPlayer implements Drawable {
     
     public ClientEntityPlayer(int id, String name, double x, double y) {
         super(id, name, x, y);
-        animation = AnimationFactory.start().addFrame("body.png").loop(true).finish();
+        //animation = AnimationFactory.start().addFrame("player_pyro.png").loop(true).finish();
+        System.out.println(Util.randomInt(1, 4));
+        
+        //Fun code for using all the different player sprites. TODO: Server decides who gets which sprites
+        switch (Util.randomInt(1, 4)) {
+            case 1:
+                animation = AnimationFactory.start().addFrame("player_pyro.png").loop(true).finish();          
+                break;
+            case 2:
+                animation = AnimationFactory.start().addFrame("player_mechanic.png").loop(true).finish();
+                width = 24;
+                height = 48;
+                break;
+            case 3:
+                animation = AnimationFactory.start().addFrame("player_tracker.png").loop(true).finish();
+                width = 28;
+                height = 48;
+                speed *= 1.3;
+                break;
+            case 4:
+                animation = AnimationFactory.start().addFrame("player_medic.png").loop(true).finish();
+                width = 28;
+                height = 46;
+                speed /= 1.3;
+                break;
+                           
+        } 
     }
     
     double lastX = 0;
@@ -61,10 +87,10 @@ public class ClientEntityPlayer extends EntityPlayer implements Drawable {
             
             // if facing right, flip the image
             g.drawImage(image, 
-                    Util.round(lerpX) + (int) (facingLeft ? 0 : image.getWidth() * size), 
+                    Util.round(lerpX) + (int) (facingLeft ? 0 : width), 
                     Util.round(lerpY), 
-                    Util.round(image.getWidth() * size) * (facingLeft ? 1 : -1), 
-                    Util.round(image.getHeight() * size), 
+                    Util.round(width) * (facingLeft ? 1 : -1), 
+                    Util.round(height), 
                     null);
         }
         
@@ -72,9 +98,8 @@ public class ClientEntityPlayer extends EntityPlayer implements Drawable {
             drawHealth(lerpX, lerpY - 42, g);
         }
         
-        BufferedImage frame = animation.getCurrentFrame(false);
         int textWidth = g.getFontMetrics().stringWidth(name);
-        g.drawString(name, Util.round((lerpX + (frame.getWidth() / 2) - (textWidth / 2))), Util.round((lerpY - (frame.getHeight() / 2))));
+        g.drawString(name, Util.round((lerpX + (width / 2) - (textWidth / 2))), Util.round((lerpY - (height / 4))));
         
         if (Client.DEBUG) {
             Rectangle collisionBox = this.getCollisionBox().getBounds();
@@ -88,25 +113,5 @@ public class ClientEntityPlayer extends EntityPlayer implements Drawable {
                     (int) (collisionBox.getCenterX() + 30 * Math.sin(Math.toRadians(angle))), 
                     (int) (collisionBox.getCenterY() + -30 * Math.cos(Math.toRadians(angle))));
         }
-    }
-    
-    /**
-     * Draws this LivingEntity's health bar at dX and dY.
-     */
-    public void drawHealth(double dX, double dY, Graphics2D g) {
-        int healthBarWidth = 32;
-        
-        int iX = Util.round(dX);
-        int iY = Util.round(dY);
-        g.setColor(new Color(0, 0, 0));
-        g.drawRect(iX - 1, iY - 12, healthBarWidth + 2, 8);
-        g.setColor(Color.red);
-        g.drawRect(iX, iY - 11, healthBarWidth, 6);
-        g.fillRect(iX, iY - 11, healthBarWidth, 6);
-        g.setColor(new Color(0, 190, 0));
-        double greenBarWidth = ((health) / maxHealth) * healthBarWidth;
-        g.drawRect(iX, iY - 11, (int) greenBarWidth, 6);
-        g.fillRect(iX, iY - 11, (int) greenBarWidth, 6);
-        g.setColor(new Color(0, 0, 0));
     }
 }

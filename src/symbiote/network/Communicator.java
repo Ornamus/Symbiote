@@ -8,6 +8,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import symbiote.Main;
+import symbiote.client.Client;
 
 public abstract class Communicator extends Thread {
     public enum Type {
@@ -39,13 +40,14 @@ public abstract class Communicator extends Thread {
                 continue;
             }
             
-            out.writeByte(id); //TODO: this line errors repeatedly once this client has disconnected, which is weird, since this all should terminate once the connection closes
+            out.writeByte(id);
             
             byte[] b = s.toBytes();
             
             out.writeInt(b.length);
             out.write(b);
             
+            if (Client.DEBUG)
             System.out.println(this.getType() + " sending packet "+s+" id " + Main.packetToID.get(s.getClass()) + s.getClass() + " #" + b.length);
         }
     }
@@ -89,7 +91,7 @@ public abstract class Communicator extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            onClose();
+            onClose(); //TODO: This doesn't seem to be being called
             
             try {
                 socket.close();

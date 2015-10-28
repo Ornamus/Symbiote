@@ -2,8 +2,6 @@ package symbiote.network;
 
 import java.net.Socket;
 
-import symbiote.server.Server;
-
 public class ServerCommunicator extends Communicator {
 
     public ServerCommunicator(Socket socket) {
@@ -20,11 +18,12 @@ public class ServerCommunicator extends Communicator {
         //Server.clients.add(this);
     }
 
+    //TODO: This function isn't being called, so the stuff below is now being done in Server.handlePlayerDisconnect()
     @Override
     public void onClose() {
-        Server.clients.remove(this);
+        //Server.clients.remove(this);
         
-        Server.gui.log(name + " has disconnected.");
-        Server.gui.refreshClients();
+        //Server.gui.log(name + " has disconnected.");
+        //Server.gui.refreshClients();
     }
 }

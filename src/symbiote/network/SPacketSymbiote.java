@@ -11,13 +11,15 @@ import symbiote.network.Communicator.Type;
 public class SPacketSymbiote extends SAbstractPacketEntity {
     boolean dontUse;
     private boolean you;
+    String name;
 
     public SPacketSymbiote() {
     }
     
-    public SPacketSymbiote(int id, double x, double y, double angle, boolean dontUse, boolean you) {
+    public SPacketSymbiote(int id, String name, double x, double y, double angle, boolean dontUse, boolean you) {
         super(id, x, y, angle);
         
+        this.name = name;
         this.dontUse = dontUse;
         this.you = you;
     }
@@ -26,6 +28,7 @@ public class SPacketSymbiote extends SAbstractPacketEntity {
     public void write(ObjectOutputStream out) throws Exception {
         super.write(out);
         
+        out.writeUTF(name);
         out.writeBoolean(dontUse);
         out.writeBoolean(this.you);
     }
@@ -34,6 +37,7 @@ public class SPacketSymbiote extends SAbstractPacketEntity {
     public void read(ObjectInputStream in) throws Exception {
         super.read(in);
         
+        this.name = in.readUTF();
         this.dontUse = in.readBoolean();
         this.you = in.readBoolean();
     }
@@ -43,11 +47,11 @@ public class SPacketSymbiote extends SAbstractPacketEntity {
         if (comm.getType() == Type.CLIENTSIDE) {
             ClientEntitySymbiote sim;
             if (this.you) {
-                sim = new ClientEntityThisSymbiote(this.getId(), 0, 0);
+                sim = new ClientEntityThisSymbiote(this.getId(), name, 0, 0);
                 sim.playing = true;
                 Client.focus = sim;
             } else {
-                sim = new ClientEntitySymbiote(this.getId(), 0, 0);
+                sim = new ClientEntitySymbiote(this.getId(), name, 0, 0);
                 sim.playing = false;
             }
             //sim.id = this.getId();

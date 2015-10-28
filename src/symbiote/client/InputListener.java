@@ -12,8 +12,14 @@ import symbiote.misc.Util;
 
 public class InputListener implements MouseListener, KeyListener {
     
-    public static boolean mouseHeld = false;
-    public static MouseEvent mouseHeldEvent = null;
+    public static boolean leftMouseHeld = false;
+    public static boolean middleMouseHeld = false;
+    public static boolean rightMouseHeld = false;
+    
+    public static MouseEvent leftMouseEvent = null;
+    public static MouseEvent middleMouseEvent = null;
+    public static MouseEvent rightMouseEvent = null;
+
     public static List<Interactable> extras = new ArrayList<>();
     
     @Override
@@ -26,8 +32,18 @@ public class InputListener implements MouseListener, KeyListener {
         for (Interactable i : extras) {
             i.mouseClicked(p.x, p.y, e);
         }
-        mouseHeld = true;
-        mouseHeldEvent = e;
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            leftMouseHeld = true;
+            leftMouseEvent = e;
+        }
+        if (e.getButton() == MouseEvent.BUTTON2) {
+            middleMouseHeld = true;
+            middleMouseEvent = e;
+        }
+        if (e.getButton() == MouseEvent.BUTTON3) {
+            rightMouseHeld = true;
+            rightMouseEvent = e;
+        }
     }
 
     @Override
@@ -37,7 +53,9 @@ public class InputListener implements MouseListener, KeyListener {
         for (Interactable i : extras) {
             i.mouseReleased(p.x, p.y, e);
         }
-        mouseHeld = false;
+        if (e.getButton() == MouseEvent.BUTTON1) leftMouseHeld = false;
+        if (e.getButton() == MouseEvent.BUTTON2) middleMouseHeld = false;
+        if (e.getButton() == MouseEvent.BUTTON3) rightMouseHeld = false;
     }
 
     @Override

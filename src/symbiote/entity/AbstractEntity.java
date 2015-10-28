@@ -43,10 +43,12 @@ public abstract class AbstractEntity {
     public boolean velocityDecrease = true;
     
     public double angle = 0;
-    public double size = 1; //TODO: Phase this out because it's useless if you manually handle width and height...?
+    
+    public boolean foreground = true;
+    public boolean usePhysics = true;
     
     public void tick() {
-        physicsTick();
+        if (usePhysics) physicsTick();
     }
     public abstract AbstractPacket getPacket();
     
@@ -54,6 +56,7 @@ public abstract class AbstractEntity {
         // TODO: determine side-effects
         if (Main.client) {
             Client.screen.thingMap.remove(this.id);
+            if (Client.focus == this) Client.focus = null;
         } else {
             Server.entities.remove(this.id);
         }
@@ -93,13 +96,25 @@ public abstract class AbstractEntity {
         //}
         return shape;
     }
+    
+    /**
+     * Returns the complete bounds of an object, unlike getCollisionBox(), which often has hitboxes that does not include
+     * the entire entity.
+     */
+    public Shape getBounds() {
+        Shape shape = new Rectangle2D.Double(x, y, width, height);
+        AffineTransform transform = new AffineTransform();
+        transform.rotate(Math.toRadians(angle), x + width / 2, y + height / 2);
+        shape = transform.createTransformedShape(shape);
+        return shape;
+    }
 
     public double getCenterX() {
-        return x + ((width * size) / 2);
+        return x + ((width) / 2);
     }
     
     public double getCenterY() {
-        return y + ((height * size) / 2);
+        return y + ((height) / 2);
     }
     
     public double getCollisionBoxCenterX() {

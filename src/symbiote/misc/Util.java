@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.geom.Line2D;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 import symbiote.client.Board;
 import symbiote.client.Client;
@@ -19,7 +22,13 @@ public class Util {
     public static int round(double d) {
         return (int) Math.round(d);
     }
-    
+
+    public static <T extends Comparable<? super T>> List<T> asSortedList(Collection<T> c) {
+        List<T> list = new ArrayList<T>(c);
+        java.util.Collections.sort(list);
+        return list;
+    }
+
     /**
      * A linear interpolation, which doesn't check the bounds of the 'a' parameter.
      * @param start The lowest value at a=0
@@ -100,7 +109,7 @@ public class Util {
     }
 
     /**
-     * Gets the angle between (x,y) and (x2, y2).
+     * Gets the angle between (x, y) and (x2, y2).
      * @return 
      */
     public static double angle(double x, double y, double x2, double y2) {
