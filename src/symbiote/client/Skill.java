@@ -1,10 +1,7 @@
 package symbiote.client;
 
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import javax.swing.Timer;
 import symbiote.client.screen.SkillBar;
 import symbiote.entity.AbstractEntity;
 import symbiote.entity.LivingEntity;
@@ -18,7 +15,7 @@ public abstract class Skill {
     
     //TODO: Effects that make it obvious what skill is selected
     
-    public static Skill SHOOT_BULLET = new Skill("Shoot", 1, "skill_gun"){
+    public static Skill SHOOT_BULLET = new Skill("Shoot", 0.4, "skill_gun"){
         @Override
         public void code(AbstractEntity e, Point p) {
             Point m = Util.getMouseInWorld();
@@ -66,48 +63,68 @@ public abstract class Skill {
         }
     };
 
-    public static Skill NOTHING = new Skill("Do Nothing", 0.1, "skill_nothing"){};
+    public static Skill NOTHING = new Skill("Do Nothing", 0, "skill_nothing"){};
     
     
     public String name;
     public BufferedImage icon;
     public boolean useOnSelect = false;
     
-    public double cooldownTime = 0;
-    public double currentCooldown = 0;
-    public boolean onCooldown = false;
-    public Timer cooldownTimer;
+    /**
+     * How many seconds the skill takes to cool down
+     */
+    private double cooldownTime = 0;
+    
+    /**
+     * System.nanoTime of the last use
+     */
+    private long lastUseTime;
     
     public Skill(String name, double cooldown, String icon) {
         this.name = name;
-        this.cooldownTime = cooldown;
         this.icon = ImageHandler.getImage(icon + ".png");
-    }    
+        this.lastUseTime = System.nanoTime() - (int) (cooldown * 10e8);
+        setCooldownTime(cooldown);
+    }
     
-    public void cooldownTimer(int time) {
-        cooldownTimer = new Timer(time, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent a) {
-                currentCooldown += time / 1000;
-                if (currentCooldown >= cooldownTime) {
-                    cooldownTimer.stop();
-                    onCooldown = false;
-                    currentCooldown = 0;
-                } else {
-                    double timeLeft = cooldownTime - currentCooldown;
-                    cooldownTimer.stop();
-                    cooldownTimer(timeLeft >= 1 ? 1000 : Util.round(timeLeft * 1000));
-                }
-            }
-        });
-        cooldownTimer.start();
+    /**
+     * @return Whether this skill is in a state of cooldown, where it cannot be used.
+     */
+    public boolean isOnCooldown() {
+        return (System.nanoTime() - lastUseTime) / 10e8 < getCooldownTime();
+    }
+    
+    /**
+     * @return The time, in seconds, that this skill takes to cool down after use.
+     */
+    public double getCooldownTime() {
+        return cooldownTime;
+    }
+    
+    /**
+     * Sets how long the skill takes to cool down after use.
+     * @param cooldownTime The cooldown time, in seconds
+     */
+    public void setCooldownTime(double cooldownTime) {
+        this.cooldownTime = cooldownTime;
+    }
+    
+    /**
+     * @return The time, in seconds, that this skill has left until it is off cooldown, or 0 if cooldown is not in effect.
+     */
+    public double getSecondsLeft() {
+        if (isOnCooldown()) {
+            return getCooldownTime() - ((System.nanoTime() - lastUseTime) / 10e8);
+        } else {
+            return 0;
+        }
     }
     
     public void use(AbstractEntity user, Point p) {
-        if (!onCooldown) {
+        if (!this.isOnCooldown()) {
+            this.lastUseTime = System.nanoTime();
+            
             code(user, p);
-            onCooldown = true;
-            cooldownTimer(cooldownTime >= 1 ? 1000 : Util.round(cooldownTime * 1000));
         }
     }
     

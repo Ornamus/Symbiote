@@ -1,10 +1,14 @@
 package symbiote.client.screen;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Shape;
+import java.awt.Stroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+
 import symbiote.client.Client;
 import symbiote.client.InputListener;
 import symbiote.client.Skill;
@@ -24,28 +28,36 @@ public class SkillBar extends GUI implements Interactable {
     
     @Override
     public void draw(Graphics2D g) {
-        for (int i=0; i<4; i++) {            
-            int drawX = Util.round(x) + (i * 36);
+        final int cooldownSize = 32;
+        
+        Color oldColor = g.getColor();
+        for (int i = 0; i < skills.length; i++) {            
+            int drawX = Util.round(x) + i * (cooldownSize + 4);
             int drawY = Util.round(y);
             Skill k = skills[i];
             g.drawImage(k.icon, drawX, drawY, null);
 
-            Color oldColor = g.getColor();
-            if (k.onCooldown) {
+            if (k.isOnCooldown()) {
                 g.setColor(new Color(0, 0, 0, 128));
-                g.fillRect(drawX, drawY, 32, 32); //TODO: be fancy and have the gray overlay get shorter as the cooldown finishes
-                g.setColor(Color.white);
-                g.drawString((k.cooldownTime - k.currentCooldown) + "", drawX + 5, drawY + 15);
+                g.clipRect(drawX, drawY, cooldownSize, cooldownSize);
+                g.fillArc(
+                        drawX - cooldownSize / 2, 
+                        drawY - cooldownSize / 2,
+                        cooldownSize * 2, 
+                        cooldownSize * 2, 
+                        90,
+                        (int) (k.getSecondsLeft() / k.getCooldownTime() * 360));
+                
+                g.setClip(null);
             }
             if (i == selected) {
                 g.setColor(Color.red);
             } else {
                 g.setColor(Color.blue);
             }
-            g.drawRect(drawX, drawY, 32, 32);           
-            
-            g.setColor(oldColor);
+            g.drawRect(drawX, drawY, cooldownSize, cooldownSize);
         }
+        g.setColor(oldColor);
     }
          
     @Override 
@@ -60,7 +72,7 @@ public class SkillBar extends GUI implements Interactable {
             select(3);
         }
         Skill s = getSelected();
-        if (s != null && s.useOnSelect) {
+        if (s != null && !s.isOnCooldown() && s.useOnSelect) {
             s.use(Client.focus, new Point(Util.round(Client.focus.x), Util.round(Client.focus.y)));
             selected = -1;
         }
@@ -74,10 +86,8 @@ public class SkillBar extends GUI implements Interactable {
     }
     
     public static void select(int index) {
-        if (index < 4 && index > -2) {
-            if (index == -1 || !skills[index].onCooldown) {
-                selected = index;
-            }
+        if (index < skills.length && index > -2) {
+            selected = index;
         } else {
             System.out.println("[ERROR] Invalid index '" + index + "' for skillbar!");
         }
