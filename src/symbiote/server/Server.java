@@ -119,7 +119,7 @@ public class Server extends Thread {
                     Communicator c = new ServerCommunicator(listener.accept());
                     c.start();
                     gui.log("Opened a connection with " + c.getSocket().getInetAddress().getHostAddress() + ".");
-                    gui.log("Port: " + c.getSocket().getLocalPort());
+                    //gui.log("Port: " + c.getSocket().getLocalPort());
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }

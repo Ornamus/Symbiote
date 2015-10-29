@@ -22,17 +22,18 @@ public class EntityBullet extends AbstractEntity {
         this.width = 5;
         this.height = 10;
         
-        deathTimer = new Timer(10000, new ActionListener() {
+        deathTimer = new Timer(5000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 destroy();
             }        
         });
+        
+        deathTimer.setRepeats(false);
+        deathTimer.start();
+
     }
     
-    /**
-     * Don't hit the owner
-     */
     @Override
     public boolean intersects(AbstractEntity t) {
         if (t.id == ownerID) {

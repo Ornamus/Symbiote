@@ -6,24 +6,28 @@ import symbiote.entity.AbstractEntity;
 
 public class WorldUtil {
     
-    public static List<AbstractEntity> createWallSegment(double x, double botY, int height) {
+    public static List<AbstractEntity> createWallSegment(double x, double botY, int height, int thickness) {
         List<AbstractEntity> entities = new ArrayList<>();
         int progress = 0;
-        for (int i=height-1;i>-1;i--) {
+        thickness--;
+        for (int i=height+thickness-1;i>-1;i--) {
             String block = "WallFront";
-            if (i == 0) {
+            if (i == thickness) {
                 block = "WallTransition";
+            } else if (i < thickness) {
+                block = "WallTop";
             }
-            entities.add(new Block(999 + AbstractEntity.getNextID(), x, botY - (progress * 32), block));
+            Block b = new Block(999 + AbstractEntity.getNextID(), x, botY - (progress * 32), block, (progress <= thickness));
+            entities.add(b);
             progress++; 
         }
         return entities;
     }
     
-    public static List<AbstractEntity> createWall(double startX, double botY, int width, int height) {
+    public static List<AbstractEntity> createWall(double startX, double botY, int width, int height, int thickness) {
         List<AbstractEntity> entities = new ArrayList<>();
         for (int i=0;i<width;i++) {
-            for (AbstractEntity e : createWallSegment(startX + (i * 32), botY, height)) {
+            for (AbstractEntity e : createWallSegment(startX + (i * 32), botY, height, thickness)) {
                 entities.add(e);
             }
         }

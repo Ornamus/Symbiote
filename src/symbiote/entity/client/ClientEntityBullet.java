@@ -24,7 +24,7 @@ public class ClientEntityBullet extends EntityBullet implements Drawable {
         boolean living = false;
         boolean hit = true;
         if (e instanceof LivingEntity) living = true;
-        if (e.id == ownerID || !e.foreground) {
+        if (e.id == ownerID || e.renderType == RenderType.BACKGROUND) {
             hit = false;
         }
         if (hit) {

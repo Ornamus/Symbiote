@@ -28,7 +28,7 @@ public class InputListener implements MouseListener, KeyListener {
     @Override
     public void mousePressed(MouseEvent e) {
         Point p = Util.getMouseOnScreen();
-        Client.screen.mouseClicked(p.x, p.y, e);
+        if (Client.screen != null) Client.screen.mouseClicked(p.x, p.y, e);
         for (Interactable i : extras) {
             i.mouseClicked(p.x, p.y, e);
         }
@@ -49,7 +49,7 @@ public class InputListener implements MouseListener, KeyListener {
     @Override
     public void mouseReleased(MouseEvent e) {
         Point p = Util.getMouseOnScreen();
-        Client.screen.mouseReleased(p.x, p.y, e);
+        if (Client.screen != null) Client.screen.mouseReleased(p.x, p.y, e);
         for (Interactable i : extras) {
             i.mouseReleased(p.x, p.y, e);
         }
@@ -60,7 +60,7 @@ public class InputListener implements MouseListener, KeyListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        Client.screen.mouseEnter();
+        if (Client.screen != null) Client.screen.mouseEnter();
         for (Interactable i : extras) {
             i.mouseEnter();
         }
@@ -68,7 +68,7 @@ public class InputListener implements MouseListener, KeyListener {
 
     @Override
     public void mouseExited(MouseEvent e) {
-        Client.screen.mouseLeave();
+        if (Client.screen != null) Client.screen.mouseLeave();
         for (Interactable i : extras) {
             i.mouseLeave();
         }
@@ -79,7 +79,7 @@ public class InputListener implements MouseListener, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        Client.screen.keyPressed(e);
+        if (Client.screen != null) Client.screen.keyPressed(e);
         for (Interactable i : extras) {
             i.keyPressed(e);
         }
@@ -87,7 +87,7 @@ public class InputListener implements MouseListener, KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        Client.screen.keyReleased(e);
+        if (Client.screen != null) Client.screen.keyReleased(e);
         for (Interactable i : extras) {
             i.keyReleased(e);
         }

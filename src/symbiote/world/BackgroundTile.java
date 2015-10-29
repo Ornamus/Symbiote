@@ -1,9 +1,11 @@
 package symbiote.world;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import symbiote.client.Client;
 import symbiote.entity.AbstractEntity;
+import symbiote.entity.EntityUtil;
 import symbiote.entity.client.ClientEntity;
 import symbiote.entity.client.Drawable;
 import symbiote.misc.Util;
@@ -12,30 +14,34 @@ import symbiote.resources.ImageHandler;
 
 public class BackgroundTile extends ClientEntity implements Drawable {
 
-    public BufferedImage normal;
-    public BufferedImage shadow;
+    public BufferedImage image;
     
     public BackgroundTile(int id, double x, double y, String imageName) {
         super(id, x, y);
-        normal = ImageHandler.getImage(imageName + ".png");
-        shadow = ImageHandler.getImage(imageName + "Shadow.png");
+        image = ImageHandler.getImage(imageName + ".png");
         
         width = 32;
         height = 32;
-        foreground = false;
+        renderType = RenderType.BACKGROUND;
         usePhysics = false;
     }
     
     @Override
     public void draw(Graphics2D g) {
         boolean above = false;
-        for (AbstractEntity e : Client.screen.thingMap.values()) {
-            if (e instanceof Block && e.getBounds().contains(x, y-1)) {
+        for (AbstractEntity e : EntityUtil.getEntitiesAt(x, y-2)) {
+            if (e instanceof Block) {
                 above = true;
                 break;
             }
         }
-        g.drawImage(above ? shadow : normal, Util.round(x), Util.round(y), Util.round(width), Util.round(height), null);
+        g.drawImage(image, Util.round(x), Util.round(y), Util.round(width), Util.round(height), null);
+        if (above) { //Darken the image
+            Color oldC = g.getColor();
+            g.setColor(new Color(0, 0, 0, 70));
+            g.fillRect(Util.round(x), Util.round(y), Util.round(width), Util.round(height));
+            g.setColor(oldC);          
+        }
     }
 
     @Override

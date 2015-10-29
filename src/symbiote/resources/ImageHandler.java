@@ -6,8 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.ImageIcon;
 
 public class ImageHandler {
@@ -58,7 +56,7 @@ public class ImageHandler {
 
         return flipped;
     }
-    
+
     public static void drawRotated(BufferedImage i, double x, double y, double angle, Graphics2D g) {
         AffineTransform transform = new AffineTransform();
         transform.rotate(Math.toRadians(angle), x + (i.getWidth() / 2), y + (i.getHeight() / 2));

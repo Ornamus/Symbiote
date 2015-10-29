@@ -72,6 +72,7 @@ public class CPacketJoin extends AbstractPacket {
                 }
                 
                 // inform the new client of all existing things
+                //TODO: Bullets that have long since been shot and despawned are appearing for new clients
                 for (AbstractEntity thing : Server.entities.values()) {
                     if (thing.id != id) {
                         AbstractPacket p = ((AbstractEntity) thing).getPacket();

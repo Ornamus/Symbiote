@@ -12,16 +12,17 @@ import symbiote.resources.Animation;
 import symbiote.resources.AnimationFactory;
 import symbiote.misc.Util;
 
-public class ClientEntityPlayer extends EntityPlayer implements Drawable {
+public class ClientEntityPlayer extends EntityPlayer implements ComplexDrawable {
     BufferedImage image = null;
     Animation animation;
     
     public boolean playing = false;
     
     public ClientEntityPlayer(int id, String name, double x, double y) {
-        super(id, name, x, y);
+        super(id, name, x, y);       
         //animation = AnimationFactory.start().addFrame("player_pyro.png").loop(true).finish();
-        System.out.println(Util.randomInt(1, 4));
+        
+        Util.randomInt(1, 4); //Not doing this seems to make the client start off as the same character EVERY TIME. Probably something with random seeds, I dunno
         
         //Fun code for using all the different player sprites. TODO: Server decides who gets which sprites
         switch (Util.randomInt(1, 4)) {
@@ -37,13 +38,11 @@ public class ClientEntityPlayer extends EntityPlayer implements Drawable {
                 animation = AnimationFactory.start().addFrame("player_tracker.png").loop(true).finish();
                 width = 28;
                 height = 48;
-                speed *= 1.3;
                 break;
             case 4:
                 animation = AnimationFactory.start().addFrame("player_medic.png").loop(true).finish();
                 width = 28;
                 height = 46;
-                speed /= 1.3;
                 break;
                            
         } 
@@ -75,11 +74,16 @@ public class ClientEntityPlayer extends EntityPlayer implements Drawable {
         return new Rectangle2D.Double(x, y + height * (2/3d), width, height / 3d);
     }
     
+    double lastLerpX = 0, lastLerpY = 0;
+    
     @Override
     public void draw(Graphics2D g) {
         double a = ((double) System.currentTimeMillis() - lastPacketUpdate) / (double) Client.PACKET_SEND_RATE;
         double lerpX = Util.lerp(this.lastX, this.x, a),
                 lerpY = Util.lerp(this.lastY, this.y, a);
+        
+        lastLerpX = lerpX;
+        lastLerpY = lerpY;
         
         if (image != null) {
             // first maps negative angles to 0-360, 'left' is >=180 in clockwise degrees. 
@@ -92,14 +96,7 @@ public class ClientEntityPlayer extends EntityPlayer implements Drawable {
                     Util.round(width) * (facingLeft ? 1 : -1), 
                     Util.round(height), 
                     null);
-        }
-        
-        if (maxHealth > health) {
-            drawHealth(lerpX, lerpY - 42, g);
-        }
-        
-        int textWidth = g.getFontMetrics().stringWidth(name);
-        g.drawString(name, Util.round((lerpX + (width / 2) - (textWidth / 2))), Util.round((lerpY - (height / 4))));
+        }               
         
         if (Client.DEBUG) {
             Rectangle collisionBox = this.getCollisionBox().getBounds();
@@ -113,5 +110,15 @@ public class ClientEntityPlayer extends EntityPlayer implements Drawable {
                     (int) (collisionBox.getCenterX() + 30 * Math.sin(Math.toRadians(angle))), 
                     (int) (collisionBox.getCenterY() + -30 * Math.cos(Math.toRadians(angle))));
         }
+    }
+    
+    @Override
+    public void finalDraw(Graphics2D g) {
+        if (maxHealth > health) {
+            drawHealth(lastLerpX, lastLerpY - 42, g);
+        }
+        
+        int textWidth = g.getFontMetrics().stringWidth(name);
+        g.drawString(name, Util.round((lastLerpX + (width / 2) - (textWidth / 2))), Util.round((lastLerpY - (height / 4))));
     }
 }

@@ -1,14 +1,10 @@
 package symbiote.client.screen;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Shape;
-import java.awt.Stroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-
 import symbiote.client.Client;
 import symbiote.client.InputListener;
 import symbiote.client.Skill;

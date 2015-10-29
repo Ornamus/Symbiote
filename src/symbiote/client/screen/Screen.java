@@ -1,5 +1,7 @@
 package symbiote.client.screen;
 
+import java.awt.AlphaComposite;
+import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -9,8 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import symbiote.client.Client;
 import symbiote.client.InputListener;
 import symbiote.entity.AbstractEntity;
+import symbiote.entity.AbstractEntity.RenderType;
+import symbiote.entity.client.ComplexDrawable;
 import symbiote.entity.client.Drawable;
 import symbiote.entity.client.Interactable;
 import symbiote.misc.Util;
@@ -41,20 +46,24 @@ public class Screen {
      * @param g The Graphics2D the entities are being drawn on.
      */
     public void draw(Graphics2D g) { 
-        /* TODO: Figure out how to get walls to draw over the player if they are "behind" the wall, but draw behind the player if
-         * they are "in front" of the wall. */
+        //TODO: Keep objects from rendering over health bars and names
         HashMap<Double, List<AbstractEntity>> groupedEntities = new HashMap<>();
+        List<AbstractEntity> frontEntities = new ArrayList<>();
+        List<ComplexDrawable> complexes = new ArrayList<>();
         for (AbstractEntity e : thingMap.values()) {
             if (e instanceof Drawable) {
-                if (e.foreground) {
+                if (e.renderType == RenderType.FOREGROUND) {
                     double bottomY = e.y + e.height;
                     List<AbstractEntity> similars = groupedEntities.get(bottomY);
                     if (similars == null) similars = new ArrayList<>();
                     similars.add(e);
                     groupedEntities.put(bottomY, similars);
-                } else {
+                } else if (e.renderType == RenderType.BACKGROUND) {
                     ((Drawable)e).draw(g);
+                } else {
+                    frontEntities.add(e);
                 }
+                if (e instanceof ComplexDrawable) complexes.add((ComplexDrawable)e);
             }
         }
         List<Double> sortedDoubles = Util.asSortedList(groupedEntities.keySet());
@@ -62,6 +71,18 @@ public class Screen {
             for (AbstractEntity e : groupedEntities.get(i)) {
                 ((Drawable)e).draw(g);
             }
+        }
+        for (AbstractEntity e : frontEntities) {
+            Composite oldC = g.getComposite();
+            AbstractEntity f = Client.focus;
+            if (Client.focus != null && e.getBounds().intersects(f.x, f.y, f.width, f.height)) {        
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+            }
+            ((Drawable) e).draw(g);
+            g.setComposite(oldC);
+        }
+        for (ComplexDrawable c : complexes) {
+            c.finalDraw(g);
         }
     }
     

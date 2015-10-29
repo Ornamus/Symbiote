@@ -7,7 +7,7 @@ import symbiote.misc.Util;
 import symbiote.resources.Animation;
 import symbiote.resources.AnimationFactory;
 
-public class ClientEntitySymbiote extends EntitySymbiote implements Drawable {
+public class ClientEntitySymbiote extends EntitySymbiote implements ComplexDrawable {
     BufferedImage image = null;
     Animation animation;
     
@@ -30,7 +30,10 @@ public class ClientEntitySymbiote extends EntitySymbiote implements Drawable {
         if (image != null) {
             g.drawImage(image, Util.round(x), Util.round(y), Util.round(width), Util.round(height), null);
         }
-        
+    }
+    
+    @Override
+    public void finalDraw(Graphics2D g) {
         if (maxHealth > health) {
             drawHealth(x, y - 42, g);
         }

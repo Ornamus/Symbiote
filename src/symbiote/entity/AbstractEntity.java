@@ -44,11 +44,19 @@ public abstract class AbstractEntity {
     
     public double angle = 0;
     
-    public boolean foreground = true;
+    public RenderType renderType = RenderType.FOREGROUND;
     public boolean usePhysics = true;
     
+    public double utilLastX = 0;
+    public double utilLastY = 0;
+    
     public void tick() {
-        if (usePhysics) physicsTick();
+        if (x != utilLastX || y != utilLastY) {
+            EntityUtil.updateEntity(this);
+        }
+        utilLastX = x;
+        utilLastY = y;
+        if (usePhysics) physicsTick();        
     }
     public abstract AbstractPacket getPacket();
     
@@ -159,10 +167,10 @@ public abstract class AbstractEntity {
      * @param adjustX Whether the Entity needs to be fixed on the X plane or Y plane in the case of it colliding with a Solid.
      */
     public void handleCollisions(boolean adjustX) {
-        for (AbstractEntity t : Client.screen.thingMap.values()) {
+        for (AbstractEntity t : EntityUtil.getEntitiesIn(getBounds())) {
             if (t != this && !collisions.contains(t)) {
                 if (intersects(t)) {
-                    collide(t);
+                    collide(t); 
                     t.collide(this);
                     collisions.add(t);
                 }
@@ -197,5 +205,11 @@ public abstract class AbstractEntity {
         this.x = x;
         this.y = y;
         this.angle = angle;
+    }
+    
+    public enum RenderType {
+        BACKGROUND,
+        FOREGROUND,
+        HIGHEST
     }
 }
