@@ -1,5 +1,6 @@
 package symbiote.entity;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -7,6 +8,7 @@ import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+
 import symbiote.Main;
 import symbiote.client.Client;
 import symbiote.network.AbstractPacket;
@@ -87,6 +89,10 @@ public abstract class AbstractEntity {
      */
     public boolean intersects(AbstractEntity t) {
         return intersects(t.getCollisionBox());
+    }
+
+    public boolean intersects(Point p) {
+        return getCollisionBox().contains(p);
     }
     
     /**
