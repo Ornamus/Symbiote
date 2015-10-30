@@ -1,11 +1,12 @@
 package symbiote.entity.client;
 
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import symbiote.Main;
 import symbiote.client.Board;
 import symbiote.client.Client;
 import symbiote.client.Skill;
@@ -13,11 +14,13 @@ import symbiote.client.screen.SkillBar;
 import symbiote.entity.AbstractEntity;
 import symbiote.misc.Util;
 import symbiote.network.CPacketPosition;
+import symbiote.resources.ImageUtil;
 
 public class ClientEntityThisPlayer extends ClientEntityPlayer implements Interactable {
 
     private final List<String> keysPressed = new ArrayList<>();
     public Point destination = null;
+    public BufferedImage target = ImageUtil.getImage("target.png");
     
     /**
      * The distance the player can be from the destination point before pathing is stopped.
@@ -26,7 +29,6 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
     
     public ClientEntityThisPlayer(int id, String name, double x, double y) {
         super(id, name, x, y);
-        destination = new Point((int) Math.round(x), (int) Math.round(y));
     }
     
     @Override
@@ -74,7 +76,7 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
     
     @Override
     public void mouseReleased(int x, int y, MouseEvent m) {
-        if (((playing && !symbioteControlled) || (Client.symbiote && symbioteControlled)) && m.getButton() == MouseEvent.BUTTON1) {
+        if (!symbioteControlled && m.getButton() == MouseEvent.BUTTON1) {
             Skill k = SkillBar.getSelected();
             if (k != null) {
                 k.use(this, Util.getMouseInWorld());
@@ -82,23 +84,28 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
         }
     }
 
-    double lastX = 0;
-    double lastY = 0;
-    double lastAngle = 0;
+    double lastSentX = 0;
+    double lastSentY = 0;
+    double lastSentAngle = 0;
     long lastSend = 0;
 
+    boolean wasControlled = false;
+    
     @Override
     public void tick() {
         super.tick();
         
-        if ((playing && !symbioteControlled) || (Client.symbiote && symbioteControlled)) {
-            if (Main.client) {
-                
-                //TODO: Decide whether or not this style of movement (MOBA) should be used or not            
+        if (!symbioteControlled) {
+            if (wasControlled) {
+                wasControlled = false;
+                destination = null;
+            }
+            //TODO: Decide whether or not this style of movement (MOBA) should be used or not    
+            if (destination != null) {
                 double distanceToDestination = Math.sqrt(
-                        Math.pow(getCollisionBoxCenterX() - destination.x, 2) + 
-                        Math.pow(getCollisionBoxCenterY() - destination.y, 2));
-                
+                        Math.pow(getCollisionBoxCenterX() - destination.x, 2)
+                        + Math.pow(getCollisionBoxCenterY() - destination.y, 2));
+
                 if (distanceToDestination > DISTANCE_FROM_DESTINATION) {
                     double moveAngle = Util.angle(getCollisionBoxCenterX(), getCollisionBoxCenterY(), destination.x, destination.y);
 
@@ -109,47 +116,30 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
                         xVel = 0;
                         yVel = 0;
                     }
-                }
-
-                /*
-                if (keysPressed.contains("w")) {
-                    yVel = -speed;
-                }
-                if (keysPressed.contains("a")) {
-                    xVel = -speed;
-                }
-                if (keysPressed.contains("s")) {
-                    yVel = speed;
-                }
-                if (keysPressed.contains("d")) {
-                    xVel = speed;
-                }
-
-                //Disabled due to the new sprite not needing rotation
-                
-                Point p = Util.getMouseOnScreen();
-                if (p.x < Client.self.getWidth() && p.x > 0 && p.y < Client.self.getHeight() && p.y > 0) {
-                    double oldAngle = angle;
-                    angle = Util.angle(getCenterX(), getCenterY(), p.x + Board.offsetX, p.y + Board.offsetY);
-                    for (AbstractEntity t : Client.screen.thingMap.values()) {
-                        if (t instanceof Wall && intersects(t)) {
-                            angle = oldAngle;
-                        }
-                    }
-                }*/
-                
-                Point p = Util.getMouseOnScreen();
-                angle = Util.angle(getCenterX(), getCenterY(), p.x + Board.offsetX, p.y + Board.offsetY);
-                
-                if (System.currentTimeMillis() - lastSend > Client.PACKET_SEND_RATE && (x != lastX || y != lastY || angle != lastAngle)) {
-                    lastSend = System.currentTimeMillis();
-                    Client.communicator.sendMessage(new CPacketPosition(this.id, x, y, angle));
-                    lastX = x;
-                    lastY = y;   
-                    lastAngle = angle;
+                    destination = null;
                 }
             }
+
+            Point p = Util.getMouseOnScreen();
+            angle = Util.angle(getCenterX(), getCenterY(), p.x + Board.offsetX, p.y + Board.offsetY);
+
+            if (System.currentTimeMillis() - lastSend > Client.PACKET_SEND_RATE && (x != lastSentX || y != lastSentY || angle != lastSentAngle)) {
+                lastSend = System.currentTimeMillis();
+                Client.communicator.sendMessage(new CPacketPosition(this.id, x, y, angle));
+                lastSentX = x;
+                lastSentY = y;
+                lastSentAngle = angle;
+            }
+        } else  {
+            wasControlled = true;
         }
+    }
+    
+    @Override
+    public void finalDraw(Graphics2D g) {
+        super.finalDraw(g);
+        
+        if (destination != null) g.drawImage(target, destination.x - 5, destination.y - 5, null);
     }
 
     @Override public void mouseEnter() {}

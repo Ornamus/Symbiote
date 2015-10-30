@@ -13,7 +13,7 @@ public class AnimationFactory { //TODO add a way to make certain frames last lon
     public static AnimationFactory start() { return new AnimationFactory(); }
     
     public AnimationFactory addFrame(String imageName) {
-        frames.add(ImageHandler.getImage(imageName));
+        frames.add(ImageUtil.getImage(imageName));
         return this;
     }
     

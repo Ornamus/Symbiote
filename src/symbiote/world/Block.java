@@ -8,7 +8,7 @@ import symbiote.entity.client.ClientEntity;
 import symbiote.entity.client.Drawable;
 import symbiote.misc.Util;
 import symbiote.network.AbstractPacket;
-import symbiote.resources.ImageHandler;
+import symbiote.resources.ImageUtil;
 
 public class Block extends ClientEntity implements Drawable {
 
@@ -18,7 +18,7 @@ public class Block extends ClientEntity implements Drawable {
     
     public Block(int id, double x, double y, String block, boolean hitbox) {
         super(id, x, y);
-        image = ImageHandler.getImage(block + ".png");
+        image = ImageUtil.getImage(block + ".png");
         imageName = block;
         width = 32;
         height = 32;

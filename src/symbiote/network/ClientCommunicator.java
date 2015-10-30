@@ -3,9 +3,7 @@ package symbiote.network;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-
 import javax.swing.JOptionPane;
-
 import symbiote.client.Client;
 import symbiote.client.screen.DebugScreen;
 

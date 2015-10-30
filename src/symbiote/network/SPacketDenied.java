@@ -2,12 +2,11 @@ package symbiote.network;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
 import javax.swing.JOptionPane;
-
 import symbiote.network.Communicator.Type;
 
 public class SPacketDenied extends AbstractPacket {
+    
     String reason;
     
     public SPacketDenied() {
@@ -39,5 +38,4 @@ public class SPacketDenied extends AbstractPacket {
             comm.sendMessage(new CPacketJoin(submittedName));
         }
     }
-
 }

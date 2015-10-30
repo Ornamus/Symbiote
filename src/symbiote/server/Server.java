@@ -12,14 +12,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import symbiote.entity.AbstractEntity;
-import symbiote.entity.EntityPlayer;
-import symbiote.entity.EntitySymbiote;
+import symbiote.entity.EntityUtil;
 import symbiote.entity.LivingEntity;
 import symbiote.network.AbstractPacket;
 import symbiote.network.Communicator;
 import symbiote.network.SPacketEntityDestroy;
 import symbiote.network.SPacketPing;
 import symbiote.network.ServerCommunicator;
+import symbiote.world.WorldUtil;
 
 public class Server extends Thread { 
     
@@ -27,6 +27,7 @@ public class Server extends Thread {
     public static int port = 9001;
     public static List<Communicator> clients = new ArrayList<>();   
     public static boolean symbioteNeeded = true;
+    public Thread commandThread;
     public Thread tickThread;
 
     public static Map<Integer, AbstractEntity> entities = new ConcurrentHashMap<>();
@@ -86,7 +87,7 @@ public class Server extends Thread {
     
     @Override
     public void run() {
-        tickThread = new Thread() {
+        commandThread = new Thread() {
             @Override
             public void run() {
                 while (true) {
@@ -104,12 +105,30 @@ public class Server extends Thread {
                 }
             }
         };
+        commandThread.start();
+        
+        tickThread = new Thread() {
+            @Override
+            public void run() {
+                while (true) {                   
+                    for (AbstractEntity e : entities.values()) {
+                        e.tick();
+                    }
+                    try {
+                        sleep(25);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        };
         tickThread.start();
         
         ServerSocket listener = null;
         try {
             listener = new ServerSocket(port);
             gui.refreshClients();
+            init();
             gui.log("Server started on " + InetAddress.getLocalHost().getHostAddress() + ":" + port + ".");
         } catch (IOException ex) {
         }
@@ -131,6 +150,23 @@ public class Server extends Thread {
             } catch (IOException ex) {
             }
         }
+    }
+    
+    /**
+     * Called when the server is fully booted up, right before the loop that accepts clients starts,
+     */
+    public void init() {
+        WorldUtil.createWall(20, 100, 16, 2, 3); //Top wall
+        
+        WorldUtil.createWall(20 - 64, 292, 2, 2, 9); //Left wall
+        
+        WorldUtil.createWall(20 + (16* 32), 292, 2, 2, 9); //Right wall
+        
+        WorldUtil.createWall(20 + (5* 32), 100 + (32*5), 6, 2, 1); //Middle wall
+               
+        WorldUtil.createFloor(-12 - 64, 100-(32*4), 22, 13); //Floor     
+        
+        gui.log("Generated world.");
     }
     
     /**
@@ -161,26 +197,6 @@ public class Server extends Thread {
             }
         }
     }
-    
-    public static EntitySymbiote getSymbiote() {
-        for (AbstractEntity e : entities.values()) {
-            if (e instanceof EntitySymbiote) {
-                return (EntitySymbiote) e;
-            }
-        }
-        return null;
-    }
-
-    public static EntityPlayer getPlayer(String name) {
-        for (AbstractEntity e : entities.values()) {
-            if (e instanceof EntityPlayer) {
-                if (((EntityPlayer) e).name.equals(name)) {
-                    return (EntityPlayer) e;
-                }
-            }
-        }
-        return null;
-    }
 
     public static boolean handlePlayerDisconnect(String name, String message) {
         Communicator client = null;
@@ -191,9 +207,9 @@ public class Server extends Thread {
             }
         }
         if (client != null) {
-            LivingEntity e = Server.getPlayer(name);
+            LivingEntity e = EntityUtil.getPlayer(name);
             if (e == null) {
-                e = Server.getSymbiote();
+                e = EntityUtil.getSymbiote();
             }
             if (e.name.equalsIgnoreCase(name)) {
                 Server.broadcast(new SPacketEntityDestroy(e.id));

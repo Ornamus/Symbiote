@@ -16,8 +16,6 @@ public class ClientEntityPlayer extends EntityPlayer implements ComplexDrawable 
     BufferedImage image = null;
     Animation animation;
     
-    public boolean playing = false;
-    
     public ClientEntityPlayer(int id, String name, double x, double y) {
         super(id, name, x, y);       
         //animation = AnimationFactory.start().addFrame("player_pyro.png").loop(true).finish();
@@ -114,7 +112,7 @@ public class ClientEntityPlayer extends EntityPlayer implements ComplexDrawable 
     
     @Override
     public void finalDraw(Graphics2D g) {
-        if (maxHealth > health) {
+        if (maxHealth > getHealth()) {
             drawHealth(lastLerpX, lastLerpY - 42, g);
         }
         

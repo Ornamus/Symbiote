@@ -59,7 +59,6 @@ public class SPacketPlayer extends SAbstractPacketEntity {
                 player = new ClientEntityPlayer(this.getId(), this.name, this.getX(), this.getY());
             }
             
-            player.playing = this.you;
             player.angle = this.getAngle();
             
             Client.screen.thingMap.put(this.getId(), player);

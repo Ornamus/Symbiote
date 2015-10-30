@@ -53,5 +53,4 @@ public class CPacketShoot extends AbstractPacket {
         Server.broadcast(b.getPacket());
         Server.entities.put(b.id, b);
     }
-
 }

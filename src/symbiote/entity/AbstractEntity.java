@@ -8,10 +8,10 @@ import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
-
 import symbiote.Main;
 import symbiote.client.Client;
 import symbiote.network.AbstractPacket;
+import symbiote.network.SPacketEntityDestroy;
 import symbiote.server.Server;
 import symbiote.world.Block;
 
@@ -49,15 +49,7 @@ public abstract class AbstractEntity {
     public RenderType renderType = RenderType.FOREGROUND;
     public boolean usePhysics = true;
     
-    public double utilLastX = 0;
-    public double utilLastY = 0;
-    
     public void tick() {
-        if (x != utilLastX || y != utilLastY) {
-            EntityUtil.updateEntity(this);
-        }
-        utilLastX = x;
-        utilLastY = y;
         if (usePhysics) physicsTick();        
     }
     public abstract AbstractPacket getPacket();
@@ -68,6 +60,7 @@ public abstract class AbstractEntity {
             Client.screen.thingMap.remove(this.id);
             if (Client.focus == this) Client.focus = null;
         } else {
+            Server.broadcast(new SPacketEntityDestroy(this.id));
             Server.entities.remove(this.id);
         }
     }
@@ -173,7 +166,7 @@ public abstract class AbstractEntity {
      * @param adjustX Whether the Entity needs to be fixed on the X plane or Y plane in the case of it colliding with a Solid.
      */
     public void handleCollisions(boolean adjustX) {
-        for (AbstractEntity t : EntityUtil.getEntitiesIn(getBounds())) {
+        for (AbstractEntity t : EntityUtil.getEntities()) {
             if (t != this && !collisions.contains(t)) {
                 if (intersects(t)) {
                     collide(t); 

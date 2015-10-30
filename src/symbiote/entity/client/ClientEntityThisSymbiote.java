@@ -4,7 +4,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import symbiote.Main;
 import symbiote.client.Client;
 import symbiote.client.Skill;
 import symbiote.client.screen.SkillBar;
@@ -69,7 +68,7 @@ public class ClientEntityThisSymbiote extends ClientEntitySymbiote implements In
     
     @Override
     public void mouseReleased(int x, int y, MouseEvent m) {
-        if (playing && m.getButton() == MouseEvent.BUTTON1) {
+        if (m.getButton() == MouseEvent.BUTTON1) {
             Skill k = SkillBar.getSelected();
             if (k != null) {
                 k.use(this, Util.getMouseInWorld());
@@ -86,27 +85,25 @@ public class ClientEntityThisSymbiote extends ClientEntitySymbiote implements In
     public void tick() {
         super.tick();
         
-        if (Main.client && controlledEntity == this && playing) {
-            if (keysPressed.contains("w")) {
-                yVel = -speed;
-            }
-            if (keysPressed.contains("a")) {
-                xVel = -speed;
-            }
-            if (keysPressed.contains("s")) {
-                yVel = speed;
-            }
-            if (keysPressed.contains("d")) {
-                xVel = speed;
-            }
-            
-            if (System.currentTimeMillis() - lastSend > 200 && (x != lastX || y != lastY || angle != lastAngle)) {
-                lastSend = System.currentTimeMillis();
-                Client.communicator.sendMessage(new CPacketPosition(this.id, x, y, angle));
-                lastX = x;
-                lastY = y;
-                lastAngle = angle;
-            }
+        if (keysPressed.contains("w")) {
+            controlled.yVel = -speed;
+        }
+        if (keysPressed.contains("a")) {
+            controlled.xVel = -speed;
+        }
+        if (keysPressed.contains("s")) {
+            controlled.yVel = speed;
+        }
+        if (keysPressed.contains("d")) {
+            controlled.xVel = speed;
+        }
+
+        if (System.currentTimeMillis() - lastSend > 200 && (controlled.x != lastX || controlled.y != lastY || controlled.angle != lastAngle)) {
+            lastSend = System.currentTimeMillis();
+            Client.communicator.sendMessage(new CPacketPosition(controlled.id, controlled.x, controlled.y, controlled.angle));
+            lastX = controlled.x;
+            lastY = controlled.y;
+            lastAngle = controlled.angle;
         }
     }
 

@@ -2,11 +2,14 @@ package symbiote.entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import symbiote.Main;
 import symbiote.misc.Util;
+import symbiote.network.SPacketEntityHealth;
+import symbiote.server.Server;
 
 public abstract class LivingEntity extends AbstractEntity {
     public double maxHealth = 100;
-    public double health = 100;
+    private double health = 100;
     public String name = "";
     public boolean symbioteControlled = false;
     
@@ -26,7 +29,18 @@ public abstract class LivingEntity extends AbstractEntity {
             // TODO: create dead body when health == 0
         }
     }
-    
+
+    public double getHealth() {
+        return health;
+    }
+
+    public void setHealth(double newHealth) {
+        if (Main.server && health != newHealth) {
+            Server.broadcast(new SPacketEntityHealth(this.id, newHealth));
+        }
+        health = newHealth;
+    }
+
     public void drawHealth(double dX, double dY, Graphics2D g) {
         int healthBarWidth = 32;
         

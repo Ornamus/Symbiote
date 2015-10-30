@@ -2,7 +2,6 @@ package symbiote.client.screen;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import symbiote.client.Client;
@@ -13,6 +12,9 @@ import symbiote.misc.Util;
 
 public class SkillBar extends GUI implements Interactable {
 
+    //TODO: Change skills to not be selectable, and instead have them be "press and point" abilities?
+    //If we do that, we change left click to be a "basic attack", which is basically just shooting a bullet
+    
     public static int selected = 0;
     static Skill[] skills;
     
@@ -69,7 +71,7 @@ public class SkillBar extends GUI implements Interactable {
         }
         Skill s = getSelected();
         if (s != null && !s.isOnCooldown() && s.useOnSelect) {
-            s.use(Client.focus, new Point(Util.round(Client.focus.x), Util.round(Client.focus.y)));
+            s.use(Client.focus, Util.getMouseInWorld());
             selected = -1;
         }
     }
@@ -83,7 +85,10 @@ public class SkillBar extends GUI implements Interactable {
     
     public static void select(int index) {
         if (index < skills.length && index > -2) {
-            selected = index;
+            Skill k = skills[index];
+            if (!(k.useOnSelect && k.isOnCooldown())) {
+                selected = index;
+            }
         } else {
             System.out.println("[ERROR] Invalid index '" + index + "' for skillbar!");
         }

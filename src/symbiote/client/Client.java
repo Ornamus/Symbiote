@@ -1,7 +1,6 @@
 package symbiote.client;
 
 import java.net.InetAddress;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import symbiote.client.screen.Screen;

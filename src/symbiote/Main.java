@@ -4,16 +4,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import symbiote.client.Client;
-
 import javax.swing.JOptionPane;
-
 import symbiote.network.*;
 import symbiote.server.Server;
 
 public class Main {
-
+    
     Server s = null;
     public static boolean client = false;
     public static boolean server = false;
@@ -34,6 +31,8 @@ public class Main {
         addPacket(10, SPacketPing.class);
         addPacket(11, SPacketBullet.class);
         addPacket(12, SPacketEntityDestroy.class);
+        addPacket(13, SPacketWorld.class);
+        addPacket(14, SPacketEntityHealth.class);
         
         if (result == -1)
             result = JOptionPane.showOptionDialog(

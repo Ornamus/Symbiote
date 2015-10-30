@@ -4,10 +4,9 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import symbiote.entity.AbstractEntity;
 import symbiote.entity.EntityBullet;
-import symbiote.entity.LivingEntity;
 import symbiote.resources.Animation;
 import symbiote.resources.AnimationFactory;
-import symbiote.resources.ImageHandler;
+import symbiote.resources.ImageUtil;
 
 public class ClientEntityBullet extends EntityBullet implements Drawable {
     BufferedImage image = null;
@@ -21,6 +20,8 @@ public class ClientEntityBullet extends EntityBullet implements Drawable {
     
     @Override
     public void collide(AbstractEntity e) {
+        //TODO: See if the server handles collisions and deletion properly
+        /*
         boolean living = false;
         boolean hit = true;
         if (e instanceof LivingEntity) living = true;
@@ -32,7 +33,7 @@ public class ClientEntityBullet extends EntityBullet implements Drawable {
                 ((LivingEntity) e).health -= 10;
             }
             destroy();
-        }
+        }*/
     }
     
     @Override
@@ -45,7 +46,7 @@ public class ClientEntityBullet extends EntityBullet implements Drawable {
     @Override
     public void draw(Graphics2D g) {
         if (image != null) {
-            ImageHandler.drawRotated(image, x, y, angle, g);
+            ImageUtil.drawRotated(image, x, y, angle, g);
         }
     }
 }

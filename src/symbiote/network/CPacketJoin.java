@@ -2,7 +2,6 @@ package symbiote.network;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
 import symbiote.entity.AbstractEntity;
 import symbiote.entity.EntityPlayer;
 import symbiote.entity.EntitySymbiote;
@@ -71,6 +70,8 @@ public class CPacketJoin extends AbstractPacket {
                     Server.entities.put(id, entity);
                 }
                 
+                comm.sendMessage(new SPacketWorld(true)); //Send the world to the client
+                
                 // inform the new client of all existing things
                 //TODO: Bullets that have long since been shot and despawned are appearing for new clients
                 for (AbstractEntity thing : Server.entities.values()) {
@@ -88,5 +89,4 @@ public class CPacketJoin extends AbstractPacket {
             }
         }
     }
-
 }

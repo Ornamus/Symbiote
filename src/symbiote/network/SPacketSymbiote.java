@@ -48,11 +48,9 @@ public class SPacketSymbiote extends SAbstractPacketEntity {
             ClientEntitySymbiote sim;
             if (this.you) {
                 sim = new ClientEntityThisSymbiote(this.getId(), name, 0, 0);
-                sim.playing = true;
                 Client.focus = sim;
             } else {
                 sim = new ClientEntitySymbiote(this.getId(), name, 0, 0);
-                sim.playing = false;
             }
             //sim.id = this.getId();
             Client.screen.thingMap.put(this.getId(), sim);

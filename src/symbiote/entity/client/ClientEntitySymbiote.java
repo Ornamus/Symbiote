@@ -34,7 +34,7 @@ public class ClientEntitySymbiote extends EntitySymbiote implements ComplexDrawa
     
     @Override
     public void finalDraw(Graphics2D g) {
-        if (maxHealth > health) {
+        if (maxHealth > getHealth()) {
             drawHealth(x, y - 42, g);
         }
     }

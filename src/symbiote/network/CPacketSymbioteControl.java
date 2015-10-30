@@ -3,6 +3,8 @@ package symbiote.network;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import symbiote.entity.AbstractEntity;
+import symbiote.entity.EntitySymbiote;
+import symbiote.entity.EntityUtil;
 import symbiote.entity.LivingEntity;
 import symbiote.server.Server;
 
@@ -28,22 +30,23 @@ public class CPacketSymbioteControl extends AbstractPacket {
 
     @Override
     public void handle(Communicator comm) {
-        for (AbstractEntity t : Server.entities.values()) {
+        for (AbstractEntity t : EntityUtil.getEntities()) {
             if (t instanceof LivingEntity) {
                 ((LivingEntity) t).symbioteControlled = false;
             }
         }
         LivingEntity controlled;
-        
-        if (name.equalsIgnoreCase("Symbiote")) {
-            controlled = Server.getSymbiote();
+
+        EntitySymbiote sim = EntityUtil.getSymbiote();
+        if (name.equalsIgnoreCase(sim.name)) {
+            controlled = sim;
         } else {
-            controlled = Server.getPlayer(name);
+            controlled = EntityUtil.getPlayer(name);
         }
         if (controlled != null) {
             controlled.symbioteControlled = true;
-            Server.getSymbiote().controlledEntity = controlled;
+            sim.controlled = controlled;
+            Server.broadcastExcept(this, comm);
         }
     }
-
 }

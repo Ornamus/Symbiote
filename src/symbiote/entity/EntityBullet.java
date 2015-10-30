@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import javax.swing.Timer;
 import symbiote.network.AbstractPacket;
 import symbiote.network.SPacketBullet;
+import symbiote.server.Server;
 
 public class EntityBullet extends AbstractEntity {
     public int ownerID = -1;
@@ -32,6 +33,23 @@ public class EntityBullet extends AbstractEntity {
         deathTimer.setRepeats(false);
         deathTimer.start();
 
+    }
+    
+    @Override
+    public void collide(AbstractEntity e) {
+        boolean living = false;
+        boolean hit = true;
+        if (e instanceof LivingEntity) living = true;
+        if (e.id == ownerID || e.renderType == RenderType.BACKGROUND) {
+            hit = false;
+        }
+        if (hit) {
+            if (living) {
+                LivingEntity l = (LivingEntity) e;
+                l.setHealth(l.getHealth() - 10);
+            }
+            destroy();
+        }
     }
     
     @Override

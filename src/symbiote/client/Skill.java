@@ -4,12 +4,13 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import symbiote.client.screen.SkillBar;
 import symbiote.entity.AbstractEntity;
+import symbiote.entity.EntityUtil;
 import symbiote.entity.LivingEntity;
 import symbiote.entity.client.ClientEntityThisSymbiote;
 import symbiote.misc.Util;
 import symbiote.network.CPacketShoot;
 import symbiote.network.CPacketSymbioteControl;
-import symbiote.resources.ImageHandler;
+import symbiote.resources.ImageUtil;
 
 public abstract class Skill {
     
@@ -23,36 +24,37 @@ public abstract class Skill {
         }
     };
     
-    //TODO: Symbiote is not able to control possessed player, and possessed player can still control their character. Fix this
     public static Skill SYMBIOTE_POSSESS = new Skill("Possess", 5, "skill_possess") {
         
-        BufferedImage possess = ImageHandler.getImage("skill_possess.png");
-        BufferedImage stop_possess = ImageHandler.getImage("skill_possess_stop.png");
+        BufferedImage possess = ImageUtil.getImage("skill_possess.png");
+        BufferedImage stop_possess = ImageUtil.getImage("skill_possess_stop.png");
         
         @Override
         public void code(AbstractEntity user, Point p) {
             if (user instanceof ClientEntityThisSymbiote) {
                 ClientEntityThisSymbiote sim = (ClientEntityThisSymbiote) user;
-                if (sim.controlledEntity == sim) {
-                    for (AbstractEntity t : Client.screen.thingMap.values()) {
+                if (sim.controlled == sim) {
+                    for (AbstractEntity t : EntityUtil.getEntities()) {
                         // TODO: complete controllable
                         if (t instanceof LivingEntity && t.getBounds().contains(p)) {
                         // TODO: uncomment magnitude squared
                             //if ((this.x - t.x)*(this.x - t.x) + (this.y - t.y)*(this.y - t.y) < CONTROLDISTANCE*CONTROLDISTANCE) {
                             LivingEntity e = (LivingEntity) t;
                             e.symbioteControlled = true;
-                            sim.controlledEntity = e;
+                            sim.controlled = e;
+                            Client.focus = e;
                             useOnSelect = true;
                             SkillBar.selected = -1;
-                            icon = stop_possess;
+                            icon = stop_possess;                           
                             Client.communicator.sendMessage(new CPacketSymbioteControl(e.name));
                             break;
                             //}
                         }
                     }
                 } else {
-                    sim.controlledEntity.symbioteControlled = false;
-                    sim.controlledEntity = sim;
+                    sim.controlled.symbioteControlled = false;
+                    sim.controlled = sim;
+                    Client.focus = sim;
                     useOnSelect = false;
                     icon = possess;
                     Client.communicator.sendMessage(new CPacketSymbioteControl(sim.name));
@@ -82,7 +84,7 @@ public abstract class Skill {
     
     public Skill(String name, double cooldown, String icon) {
         this.name = name;
-        this.icon = ImageHandler.getImage(icon + ".png");
+        this.icon = ImageUtil.getImage(icon + ".png");
         this.lastUseTime = System.nanoTime() - (int) (cooldown * 10e8);
         setCooldownTime(cooldown);
     }

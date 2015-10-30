@@ -3,22 +3,23 @@ package symbiote.world;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import symbiote.client.Client;
 import symbiote.entity.AbstractEntity;
 import symbiote.entity.EntityUtil;
 import symbiote.entity.client.ClientEntity;
 import symbiote.entity.client.Drawable;
 import symbiote.misc.Util;
 import symbiote.network.AbstractPacket;
-import symbiote.resources.ImageHandler;
+import symbiote.resources.ImageUtil;
 
 public class BackgroundTile extends ClientEntity implements Drawable {
 
     public BufferedImage image;
+    public String imageName;
     
     public BackgroundTile(int id, double x, double y, String imageName) {
         super(id, x, y);
-        image = ImageHandler.getImage(imageName + ".png");
+        this.imageName = imageName;
+        image = ImageUtil.getImage(imageName + ".png");
         
         width = 32;
         height = 32;

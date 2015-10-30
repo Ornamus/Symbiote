@@ -4,13 +4,12 @@ import symbiote.network.AbstractPacket;
 import symbiote.network.SPacketSymbiote;
 
 public class EntitySymbiote extends LivingEntity {
-    public LivingEntity controlledEntity;
-    public boolean playing = true;
+    public LivingEntity controlled;
     
     public EntitySymbiote(int id, String name, double x, double y) {
         super(id, x, y);
         
-        controlledEntity = this;
+        controlled = this;
         this.name = name;
     }
     

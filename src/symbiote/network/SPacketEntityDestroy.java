@@ -3,6 +3,9 @@ package symbiote.network;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import symbiote.client.Client;
+import symbiote.entity.AbstractEntity;
+import symbiote.entity.EntityUtil;
+import symbiote.entity.LivingEntity;
 import symbiote.misc.CrashError;
 
 public class SPacketEntityDestroy extends AbstractPacket {
@@ -33,10 +36,13 @@ public class SPacketEntityDestroy extends AbstractPacket {
     @Override
     public void handle(Communicator comm) {
         if (comm.getType() == Communicator.Type.CLIENTSIDE) {
-            if (Client.focus.id == eID) { //TODO: If you're the symbiote, focus isn't always your entity...right?
+            AbstractEntity e = EntityUtil.getEntityMap().get(eID);
+            if (e instanceof LivingEntity && ((LivingEntity) e).name.equals(Client.name)) {
                 new CrashError("You were kicked from the server, " + Client.name + "!");
             }
-            Client.screen.thingMap.get(eID).destroy();
+            if (e != null) {
+                e.destroy();
+            }
         }
     }
 }
