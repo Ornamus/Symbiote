@@ -8,9 +8,7 @@ import java.util.List;
 import symbiote.network.Communicator;
 
 public class ServerGUI extends javax.swing.JFrame {
-    Server server;
-    
-    public ServerGUI(Server server) {
+    public ServerGUI(final Server server) {
         initComponents();
         
         jTextField1.addActionListener(new ActionListener() {
