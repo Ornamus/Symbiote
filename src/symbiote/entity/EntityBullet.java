@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import javax.swing.Timer;
 import symbiote.network.AbstractPacket;
 import symbiote.network.SPacketBullet;
-import symbiote.server.Server;
 
 public class EntityBullet extends AbstractEntity {
     public int ownerID = -1;

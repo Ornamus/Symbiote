@@ -7,6 +7,7 @@ import symbiote.entity.AbstractEntity;
 import symbiote.entity.EntityUtil;
 import symbiote.entity.LivingEntity;
 import symbiote.entity.client.ClientEntityThisSymbiote;
+import symbiote.misc.Log;
 import symbiote.misc.Util;
 import symbiote.network.CPacketShoot;
 import symbiote.network.CPacketSymbioteControl;
@@ -128,6 +129,6 @@ public abstract class Skill {
     }
     
     public void code(AbstractEntity user) {
-        System.out.println("Skill '" + name + "' doesn't have any code!");
+        Log.w("Skill \"" + name + "\" doesn't have any code!");
     }
 }

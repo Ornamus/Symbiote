@@ -2,6 +2,7 @@ package symbiote.client.screen;
 
 import java.awt.Graphics2D;
 import symbiote.entity.client.Drawable;
+import symbiote.misc.Log;
 
 public class GUI implements Drawable {
     
@@ -14,6 +15,6 @@ public class GUI implements Drawable {
     
     @Override
     public void draw(Graphics2D g) {
-        System.out.println("[WARNING] A GUI at (" + x + ", " + y + ") doesn't have any draw code!");
+        Log.w("A GUI at (" + x + ", " + y + ") doesn't have any draw code!");
     }   
 }

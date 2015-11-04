@@ -1,12 +1,10 @@
 package symbiote.world;
 
-import java.util.ArrayList;
-import java.util.List;
 import symbiote.Main;
 import symbiote.client.Client;
 import symbiote.entity.AbstractEntity;
+import symbiote.misc.Log;
 import symbiote.server.Server;
-import static symbiote.server.Server.entities;
 
 public class WorldUtil {
     
@@ -25,7 +23,7 @@ public class WorldUtil {
                 Server.entities.put(b.id, b);
             } else {
                 Client.screen.thingMap.put(b.id, b);
-                System.out.println("[WARNING] Using server-side world generation code on the client!");
+                Log.w("Using server-side world generation code on the client!");
             }
             progress++; 
         }
@@ -45,7 +43,7 @@ public class WorldUtil {
                     Server.entities.put(t.id, t);
                 } else {
                     Client.screen.thingMap.put(t.id, t);
-                    System.out.println("[WARNING] Using server-side world generation code on the client!");
+                    Log.w("Using server-side world generation code on the client!");
                 }
             }
         }

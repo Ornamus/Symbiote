@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import symbiote.entity.AbstractEntity;
 import symbiote.entity.EntityUtil;
 import symbiote.entity.LivingEntity;
+import symbiote.misc.Log;
 import symbiote.network.AbstractPacket;
 import symbiote.network.Communicator;
 import symbiote.network.SPacketEntityDestroy;
@@ -166,7 +167,7 @@ public class Server extends Thread {
                
         WorldUtil.createFloor(-12 - 64, 100-(32*4), 22, 13); //Floor     
         
-        gui.log("Generated world.");
+        Log.i("Generated world.");
     }
     
     /**

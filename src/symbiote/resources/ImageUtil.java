@@ -1,5 +1,6 @@
 package symbiote.resources;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import symbiote.misc.Util;
 import java.awt.Graphics2D;
@@ -7,6 +8,7 @@ import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
+import symbiote.misc.Log;
 
 public class ImageUtil {
     
@@ -68,11 +70,23 @@ public class ImageUtil {
         g.setTransform(old);
     }
     
-    /*
-    int r = // red component 0...255
-    int g = // green component 0...255
-    int b = // blue component 0...255
-    int col = (r << 16) | (g << 8) | b;
-    img.setRGB(x, y, col);
-    */
+    //TODO: test this
+    public static BufferedImage createRecolor(BufferedImage originalImage, Color[] oldC, Color[] newC) {
+        if (oldC.length == newC.length) {
+            BufferedImage i = copy(originalImage);
+            for (int x = 0; x < i.getWidth(); x++) {
+                for (int y = 0; y < i.getHeight(); y++) {
+                    for (int in = 0; in < oldC.length; in++) {
+                        if (oldC[in].getRGB() == i.getRGB(x, y)) {
+                            i.setRGB(x, y, newC[in].getRGB());
+                        }
+                    }
+                }
+            }
+            return i;
+        } else {
+            Log.e("ImageUtil.createRecolor() got two differently sized palletes: " + oldC.length + " and " + newC.length + ".");
+            return null;
+        }
+    }
 }

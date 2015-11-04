@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import symbiote.client.Board;
 import symbiote.client.Client;
-import symbiote.client.Skill;
-import symbiote.client.screen.SkillBar;
 import symbiote.entity.AbstractEntity;
 import symbiote.misc.Util;
 import symbiote.network.CPacketPosition;

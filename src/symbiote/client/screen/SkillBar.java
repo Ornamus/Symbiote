@@ -81,6 +81,5 @@ public class SkillBar extends GUI implements Interactable {
     @Override public void mouseClicked(int x, int y, MouseEvent m) {}
     @Override public void mouseHeld(int x, int y, MouseEvent m) {}
     @Override public void mouseReleased(int x, int y, MouseEvent m) {}
-    @Override public void keyReleased(KeyEvent k) {}
-    
+    @Override public void keyReleased(KeyEvent k) {}    
 }
