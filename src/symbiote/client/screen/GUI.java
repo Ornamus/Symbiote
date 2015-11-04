@@ -14,6 +14,6 @@ public class GUI implements Drawable {
     
     @Override
     public void draw(Graphics2D g) {
-        System.out.println("[ERROR] A GUI at (" + x + ", " + y + ") doesn't have any draw code!");
+        System.out.println("[WARNING] A GUI at (" + x + ", " + y + ") doesn't have any draw code!");
     }   
 }

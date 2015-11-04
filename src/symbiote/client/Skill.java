@@ -18,7 +18,7 @@ public abstract class Skill {
     
     public static Skill SHOOT_BULLET = new Skill("Shoot", 0.4, "skill_gun"){
         @Override
-        public void code(AbstractEntity e, Point p) {
+        public void code(AbstractEntity e) {
             Point m = Util.getMouseInWorld();
             Client.communicator.sendMessage(new CPacketShoot(e.getCenterX(), e.getCenterY(), Util.angle(e.getCenterX(), e.getCenterY(), m.x, m.y), e.id));
         }
@@ -30,10 +30,11 @@ public abstract class Skill {
         BufferedImage stop_possess = ImageUtil.getImage("skill_possess_stop.png");
         
         @Override
-        public void code(AbstractEntity user, Point p) {
+        public void code(AbstractEntity user) {
             if (user instanceof ClientEntityThisSymbiote) {
                 ClientEntityThisSymbiote sim = (ClientEntityThisSymbiote) user;
                 if (sim.controlled == sim) {
+                    Point p = Util.getMouseInWorld();
                     for (AbstractEntity t : EntityUtil.getEntities()) {
                         // TODO: complete controllable
                         if (t instanceof LivingEntity && t.getBounds().contains(p)) {
@@ -43,8 +44,6 @@ public abstract class Skill {
                             e.symbioteControlled = true;
                             sim.controlled = e;
                             Client.focus = e;
-                            useOnSelect = true;
-                            SkillBar.selected = -1;
                             icon = stop_possess;                           
                             Client.communicator.sendMessage(new CPacketSymbioteControl(e.name));
                             break;
@@ -55,7 +54,6 @@ public abstract class Skill {
                     sim.controlled.symbioteControlled = false;
                     sim.controlled = sim;
                     Client.focus = sim;
-                    useOnSelect = false;
                     icon = possess;
                     Client.communicator.sendMessage(new CPacketSymbioteControl(sim.name));
                 }
@@ -70,7 +68,6 @@ public abstract class Skill {
     
     public String name;
     public BufferedImage icon;
-    public boolean useOnSelect = false;
     
     /**
      * How many seconds the skill takes to cool down
@@ -122,15 +119,15 @@ public abstract class Skill {
         }
     }
     
-    public void use(AbstractEntity user, Point p) {
+    public void use(AbstractEntity user) {
         if (!this.isOnCooldown()) {
             this.lastUseTime = System.nanoTime();
             
-            code(user, p);
+            code(user);
         }
     }
     
-    public void code(AbstractEntity user, Point p) {
+    public void code(AbstractEntity user) {
         System.out.println("Skill '" + name + "' doesn't have any code!");
     }
 }

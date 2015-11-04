@@ -77,10 +77,10 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
     @Override
     public void mouseReleased(int x, int y, MouseEvent m) {
         if (!symbioteControlled && m.getButton() == MouseEvent.BUTTON1) {
-            Skill k = SkillBar.getSelected();
+            /*Skill k = SkillBar.getSelected();
             if (k != null) {
                 k.use(this, Util.getMouseInWorld());
-            }
+            }*/
         }
     }
 
@@ -100,7 +100,7 @@ public class ClientEntityThisPlayer extends ClientEntityPlayer implements Intera
                 wasControlled = false;
                 destination = null;
             }
-            //TODO: Decide whether or not this style of movement (MOBA) should be used or not    
+            //TODO: Decide whether to use this style of movement (MOBA) or Hammerwatch style   
             if (destination != null) {
                 double distanceToDestination = Math.sqrt(
                         Math.pow(getCollisionBoxCenterX() - destination.x, 2)

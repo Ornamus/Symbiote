@@ -69,10 +69,10 @@ public class ClientEntityThisSymbiote extends ClientEntitySymbiote implements In
     @Override
     public void mouseReleased(int x, int y, MouseEvent m) {
         if (m.getButton() == MouseEvent.BUTTON1) {
-            Skill k = SkillBar.getSelected();
+            /*Skill k = SkillBar.getSelected();
             if (k != null) {
                 k.use(this, Util.getMouseInWorld());
-            }
+            }*/
         }
     }
 
