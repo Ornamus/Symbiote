@@ -56,6 +56,6 @@ public class Animation {
     }
     
     public List<Image> getFrames() {
-        return new ArrayList<>(frames);
+        return new ArrayList<Image>(frames);
     }
 }

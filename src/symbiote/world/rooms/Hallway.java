@@ -13,7 +13,7 @@ public class Hallway extends ThingCollection {
     public Exit exit;
     
     public Hallway(Rectangle r, boolean horizontal) { //TODO make an exit at the other end of the hallway
-        super(r.x, r.y, new ArrayList<>());
+        super(r.x, r.y, new ArrayList<AbstractEntity>());
         /*if (horizontal) {
             for (int cX = r.x; cX < r.getWidth() + r.x; cX += Room.gridUnit) {things.add(new Solid(-1, cX, r.y, "wallSheet.png"));}
             for (int cX = r.x; cX < r.getWidth() + r.x; cX += Room.gridUnit) {things.add(new Solid(-1, cX, r.y + r.height - Room.gridUnit, "wallSheet.png"));}

@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import symbiote.entity.AbstractEntity;
 import symbiote.misc.Util;
 import symbiote.resources.ConfigFile;
 
@@ -19,7 +20,7 @@ public class Room extends ThingCollection {
     public ConfigFile config;
     
     public Room(double x, double y, String name) {
-        super(x, y, new ArrayList<>());
+        super(x, y, new ArrayList<AbstractEntity>());
         /*
         this.x = x;
         this.y = y;
