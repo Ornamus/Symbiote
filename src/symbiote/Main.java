@@ -8,6 +8,10 @@ import symbiote.client.Client;
 import javax.swing.JOptionPane;
 import symbiote.network.*;
 import symbiote.server.Server;
+import symbiote.world.Floor;
+import symbiote.world.Block;
+import symbiote.world.Furniture;
+import symbiote.world.Wall;
 
 public class Main {
     
@@ -17,6 +21,9 @@ public class Main {
     
     public static Map<Integer, Class<? extends AbstractPacket>> idToPacket = new HashMap<>();
     public static Map<Class<? extends AbstractPacket>, Integer> packetToID = new HashMap<>();
+    
+    public static Map<Integer, Class<? extends Block>> idToBlock = new HashMap<>();
+    public static Map<Class<? extends Block>, Integer> blockToID = new HashMap<>();
     
     public Main(int result) {
         addPacket(1, CPacketJoin.class);
@@ -33,6 +40,11 @@ public class Main {
         addPacket(12, SPacketEntityDestroy.class);
         addPacket(13, SPacketWorld.class);
         addPacket(14, SPacketEntityHealth.class);
+        
+        addBlock(1, Block.class);
+        addBlock(2, Wall.class);
+        addBlock(3, Floor.class);
+        addBlock(4, Furniture.class);
         
         if (result == -1)
             result = JOptionPane.showOptionDialog(
@@ -79,5 +91,10 @@ public class Main {
     public static void addPacket(int id, Class<? extends AbstractPacket> p) {
         idToPacket.put(id, p);
         packetToID.put(p, id);
+    }
+    
+    public static void addBlock(int id, Class<? extends Block> b) {
+        idToBlock.put(id, b);
+        blockToID.put(b, id);
     }
 }

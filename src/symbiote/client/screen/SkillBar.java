@@ -4,6 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import symbiote.client.Client;
 import symbiote.client.InputListener;
 import symbiote.client.Skill;
@@ -14,12 +19,14 @@ public class SkillBar extends GUI implements Interactable {
 
     //TODO: Add "basic skills" that activate on left click
     
+    static Map<Integer, Skill> skillKeys = new HashMap<>();
+    
     static Skill[] skills;
     
     public SkillBar() {
         super(10, 10);
         InputListener.extras.add(this);
-        skills = new Skill[]{Skill.NOTHING, Skill.NOTHING, Skill.NOTHING, Skill.NOTHING};
+        setSkills(new Object[][]{ {KeyEvent.VK_1, Skill.NOTHING},  {KeyEvent.VK_2, Skill.NOTHING}, {KeyEvent.VK_3, Skill.NOTHING} , {KeyEvent.VK_4, Skill.NOTHING}});
     }
     
     @Override
@@ -27,10 +34,11 @@ public class SkillBar extends GUI implements Interactable {
         final int cooldownSize = 32;
         
         Color oldColor = g.getColor();
-        for (int i = 0; i < skills.length; i++) {            
+        List<Skill> visibleSkills = getVisibleSkills();
+        for (int i = 0; i < visibleSkills.size(); i++) {            
             int drawX = Util.round(x) + i * (cooldownSize + 4);
             int drawY = Util.round(y);
-            Skill k = skills[i];
+            Skill k = visibleSkills.get(i);
             g.drawImage(k.icon, drawX, drawY, null);
 
             if (k.isOnCooldown()) {
@@ -51,29 +59,38 @@ public class SkillBar extends GUI implements Interactable {
         }
         g.setColor(oldColor);
     }
+    
+    public List<Skill> getVisibleSkills() {
+        List<Skill> vSkills = new ArrayList<>();
+        for (Skill k : skills) {
+            if (k.show) vSkills.add(k);
+        }
+        return vSkills;
+    }
          
     @Override 
     public void keyPressed(KeyEvent k) {
-        int selected = -1;
-        if (k.getKeyCode() == KeyEvent.VK_1) {
-            selected = 0;
-        } else if (k.getKeyCode() == KeyEvent.VK_2) {
-            selected = 1;
-        } else if (k.getKeyCode() == KeyEvent.VK_3) {
-            selected = 2;
-        } else if (k.getKeyCode() == KeyEvent.VK_4) {
-            selected = 3;
-        }
-        if (selected > -1) {
-            Skill s = skills[selected];
-            if (s != null && !s.isOnCooldown()) {
-                s.use(Client.focus);
-            }
+        Skill s = skillKeys.get(k.getKeyCode());
+        if (s != null && !s.isOnCooldown()) {
+             s.use(Client.focus);
         }
     }
-
-    public static void setSkills(Skill[] newSkills) {
-        skills = newSkills;
+    
+    public static void setSkills(Object[][] array) {
+        for (Object[] o : array) {
+            skillKeys.put((Integer)o[0], (Skill)o[1]);
+        }
+        refreshSkills();
+    }
+    
+    public static void setSkill(Integer key, Skill s) {
+        skillKeys.put(key, s);
+        refreshSkills();
+    }
+    
+    private static void refreshSkills() {
+        Collection<Skill> values = skillKeys.values();
+        skills = values.toArray(new Skill[values.size()]);
     }
 
     @Override public void mouseEnter() {}

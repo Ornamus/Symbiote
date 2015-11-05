@@ -45,12 +45,21 @@ public abstract class AbstractEntity {
     public boolean velocityDecrease = true;
     
     public double angle = 0;
+    public boolean angleRotate = false;
     
     public RenderType renderType = RenderType.FOREGROUND;
-    public boolean usePhysics = true;
+    public boolean usePhysics = true;    
+    
+    public double lastTickX = 0, lastTickY = 0, lastTickAngle = 0;
+    
+    protected Shape cbox = null;
+    protected Shape bounds = null;
     
     public void tick() {
-        if (usePhysics) physicsTick();        
+        if (usePhysics) physicsTick(); 
+        lastTickX = x;
+        lastTickY = y;
+        lastTickAngle = angle;
     }
     public abstract AbstractPacket getPacket();
     
@@ -89,31 +98,42 @@ public abstract class AbstractEntity {
     }
     
     /**
-     * Gets the collision box of this Thing.
-     * @return The collision box of this Thing.
+     * Gets the collision box of this Entity. Entities should NOT override this, and instead override getNewCollisionBox()
+     *
+     * @return The collision box of this Entity.
      */
     public Shape getCollisionBox() {
-        Shape shape = new Rectangle2D.Double(x, y, width, height);
-        //if (!dontUse) {
-            AffineTransform transform = new AffineTransform();
-            transform.rotate(Math.toRadians(angle), x + width / 2, y + height / 2);
-            shape = transform.createTransformedShape(shape);
-        //} else {
-        //    shape = new Rectangle2D.Double(-1, -1, 0, 0);
-        //}
-        return shape;
+        if (cbox == null || x != lastTickX || y != lastTickY || (angleRotate && angle != lastTickAngle)) {
+            cbox = getNewCollisionBox();
+
+            if (angleRotate) {
+                AffineTransform transform = new AffineTransform();
+                transform.rotate(Math.toRadians(angle), x + width / 2, y + height / 2);
+                cbox = transform.createTransformedShape(cbox);
+            }
+        }
+        return cbox;
     }
     
+    protected Shape getNewCollisionBox() {
+        return new Rectangle2D.Double(x, y, width, height);
+    }
+
     /**
      * Returns the complete bounds of an object, unlike getCollisionBox(), which often has hitboxes that does not include
      * the entire entity.
      */
     public Shape getBounds() {
-        Shape shape = new Rectangle2D.Double(x, y, width, height);
-        AffineTransform transform = new AffineTransform();
-        transform.rotate(Math.toRadians(angle), x + width / 2, y + height / 2);
-        shape = transform.createTransformedShape(shape);
-        return shape;
+        if (bounds == null || x != lastTickX || y != lastTickY || (angleRotate && angle != lastTickAngle)) {
+            bounds = new Rectangle2D.Double(x, y, width, height);
+            
+            if (angleRotate) {
+                AffineTransform transform = new AffineTransform();
+                transform.rotate(Math.toRadians(angle), x + width / 2, y + height / 2);
+                bounds = transform.createTransformedShape(bounds);
+            }
+        }
+        return bounds;
     }
 
     public double getCenterX() {

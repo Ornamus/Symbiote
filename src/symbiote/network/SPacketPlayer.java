@@ -2,7 +2,6 @@ package symbiote.network;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
 import symbiote.client.Client;
 import symbiote.entity.client.ClientEntityPlayer;
 import symbiote.entity.client.ClientEntityThisPlayer;

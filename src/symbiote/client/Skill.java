@@ -2,7 +2,6 @@ package symbiote.client;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import symbiote.client.screen.SkillBar;
 import symbiote.entity.AbstractEntity;
 import symbiote.entity.EntityUtil;
 import symbiote.entity.LivingEntity;
@@ -15,6 +14,7 @@ import symbiote.resources.ImageUtil;
 
 public abstract class Skill {
     
+    //TODO: Have serverr handle skills (use code, cooldowns, ect...)
     //TODO: Effects that make it obvious what skill is selected
     
     public static Skill SHOOT_BULLET = new Skill("Shoot", 0.4, "skill_gun"){
@@ -59,7 +59,7 @@ public abstract class Skill {
                     Client.communicator.sendMessage(new CPacketSymbioteControl(sim.name));
                 }
             } else {
-                System.out.println("[ERROR] A non-symbiote entity attempted to use the possess skill!");
+                Log.e("A non-symbiote entity attempted to use the possess skill!");
             }
         }
     };
@@ -69,6 +69,8 @@ public abstract class Skill {
     
     public String name;
     public BufferedImage icon;
+    
+    public boolean show = true;
     
     /**
      * How many seconds the skill takes to cool down

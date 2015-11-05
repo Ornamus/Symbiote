@@ -19,7 +19,7 @@ public class Client extends JFrame {
     /**
      * Whether DEBUG rendering should be shown by renderers.
      */
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
     
     public static Client self;
     public static Board board;

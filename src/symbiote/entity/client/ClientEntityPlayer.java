@@ -67,7 +67,7 @@ public class ClientEntityPlayer extends EntityPlayer implements ComplexDrawable 
     }
     
     @Override
-    public Shape getCollisionBox() {
+    protected Shape getNewCollisionBox() {
         // This hitbox is just the shadow at the person's feet (1/3rd the person's height), to give a correct feel of depth
         return new Rectangle2D.Double(x, y + height * (2/3d), width, height / 3d);
     }

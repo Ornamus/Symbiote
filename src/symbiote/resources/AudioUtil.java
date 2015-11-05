@@ -14,7 +14,7 @@ public class AudioUtil {
             clip.open(inputStream);
             clip.start();
         } catch (Exception e) {
-            Log.e("AudioUtil.playSound(" + url + ") exception: " + e.getMessage());
+            Log.e("AudioUtil.playSound(" + url + ") exception:\n" + e.getMessage());
         }
     }
 }

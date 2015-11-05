@@ -1,37 +1,37 @@
 package symbiote.entity;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.Timer;
 import symbiote.network.AbstractPacket;
 import symbiote.network.SPacketBullet;
 
 public class EntityBullet extends AbstractEntity {
     public int ownerID = -1;
-    Timer deathTimer;
+    
+    public long shootTime;
 
     public EntityBullet(int id, double x, double y, double angle, int oID) {
         super(id, x, y);
         this.angle = angle;
         this.ownerID = oID;
         velocityDecrease = false;
-        speed = 8;
+        speed = 12;
         xVel = speed * Math.sin(Math.toRadians(angle));
         yVel = speed * -Math.cos(Math.toRadians(angle));
+        
+        angleRotate = true;
         
         this.width = 5;
         this.height = 10;
         
-        deathTimer = new Timer(5000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                destroy();
-            }        
-        });
-        
-        deathTimer.setRepeats(false);
-        deathTimer.start();
+        shootTime = System.nanoTime();
 
+    }
+    
+    @Override
+    public void tick() {
+        super.tick();
+        if ((System.nanoTime() - shootTime) / 10e8 >= 5) {
+            destroy();
+        }   
     }
     
     @Override

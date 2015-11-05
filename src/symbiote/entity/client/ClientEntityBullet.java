@@ -2,7 +2,6 @@ package symbiote.entity.client;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import symbiote.entity.AbstractEntity;
 import symbiote.entity.EntityBullet;
 import symbiote.resources.Animation;
 import symbiote.resources.AnimationFactory;
@@ -16,24 +15,6 @@ public class ClientEntityBullet extends EntityBullet implements Drawable {
         super(id, x, y, angle, owner);
         
         animation = AnimationFactory.start().addFrame("bullet.png").loop(true).finish();
-    }
-    
-    @Override
-    public void collide(AbstractEntity e) {
-        //TODO: See if the server handles collisions and deletion properly
-        /*
-        boolean living = false;
-        boolean hit = true;
-        if (e instanceof LivingEntity) living = true;
-        if (e.id == ownerID || e.renderType == RenderType.BACKGROUND) {
-            hit = false;
-        }
-        if (hit) {
-            if (living) {
-                ((LivingEntity) e).health -= 10;
-            }
-            destroy();
-        }*/
     }
     
     @Override

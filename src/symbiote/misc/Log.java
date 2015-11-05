@@ -1,5 +1,6 @@
 package symbiote.misc;
 
+import javax.swing.JOptionPane;
 import symbiote.Main;
 import symbiote.server.Server;
 
@@ -24,7 +25,7 @@ public class Log {
      */
     public static void e(String m) {
         systemAndGUI("[ERROR] " + m);
-                
+        if (Main.client) JOptionPane.showMessageDialog(null, "ERROR\n" + m);
     }
     
     /**

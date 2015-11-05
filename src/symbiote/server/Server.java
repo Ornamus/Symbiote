@@ -97,7 +97,6 @@ public class Server extends Thread {
                         Server.this.execute(cmd);
                     }
                     
-                    // Main.screen.tick();
                     try {
                         sleep(25);
                     } catch (InterruptedException ex) {
@@ -154,7 +153,7 @@ public class Server extends Thread {
     }
     
     /**
-     * Called when the server is fully booted up, right before the loop that accepts clients starts,
+     * Called when the server is fully booted up, right before the loop that accepts clients starts.
      */
     public void init() {
         WorldUtil.createWall(20, 100, 16, 2, 3); //Top wall
@@ -164,8 +163,12 @@ public class Server extends Thread {
         WorldUtil.createWall(20 + (16* 32), 292, 2, 2, 9); //Right wall
         
         WorldUtil.createWall(20 + (5* 32), 100 + (32*5), 6, 2, 1); //Middle wall
+        
+        WorldUtil.createTable(20 + (7* 32), 100 + (32*8), true, true);
                
         WorldUtil.createFloor(-12 - 64, 100-(32*4), 22, 13); //Floor     
+        
+        
         
         Log.i("Generated world.");
     }
@@ -222,7 +225,7 @@ public class Server extends Thread {
             Server.gui.refreshClients();
             return true;
         } else {
-            System.out.println("[ERROR] Told to disconnect client \"" + name + "\" but they don't exist!");
+            Log.e("Told to disconnect client \"" + name + "\" but they don't exist!");
             return false;
         }
     }

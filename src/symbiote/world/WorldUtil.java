@@ -3,8 +3,11 @@ package symbiote.world;
 import symbiote.Main;
 import symbiote.client.Client;
 import symbiote.entity.AbstractEntity;
+import symbiote.entity.EntityUtil;
 import symbiote.misc.Log;
 import symbiote.server.Server;
+import symbiote.world.Furniture.FurnitureType;
+import symbiote.world.Wall.WallHitbox;
 
 public class WorldUtil {
     
@@ -18,7 +21,13 @@ public class WorldUtil {
             } else if (i < thickness) {
                 block = "WallTop";
             }
-            Block b = new Block(AbstractEntity.getNextID(), x, botY - (progress * 32), block, (progress <= thickness));
+            int hitboxType = WallHitbox.FULL;
+            if (i == 0) {
+                hitboxType = WallHitbox.NONE;
+            } else if (i == 1) {
+                hitboxType = WallHitbox.THIN;
+            }
+            Block b = new Wall(AbstractEntity.getNextID(), x, botY - (progress * 32), block, hitboxType);
             if (Main.server) {
                 Server.entities.put(b.id, b);
             } else {
@@ -38,7 +47,7 @@ public class WorldUtil {
     public static void createFloor(double startX, double startY, double width, double height) {
         for (int xi = 0; xi < width; xi++) {
             for (int yi = 0; yi < height; yi++) {
-                BackgroundTile t = new BackgroundTile(AbstractEntity.getNextID(), startX + (xi * 32), startY + (yi * 32), "Floor");
+                Floor t = new Floor(AbstractEntity.getNextID(), startX + (xi * 32), startY + (yi * 32), "Floor");
                 if (Main.server) {
                     Server.entities.put(t.id, t);
                 } else {
@@ -47,5 +56,19 @@ public class WorldUtil {
                 }
             }
         }
+    }
+    
+    public static void createTable(double tX, double tY, boolean lChair, boolean rChair) {
+        Block t = new Furniture(AbstractEntity.getNextID(), tX, tY, FurnitureType.TABLE);
+        EntityUtil.getEntityMap().put(t.id, t);
+        if (lChair) {
+            t = new Furniture(AbstractEntity.getNextID(), tX - 32, tY, FurnitureType.RIGHT_CHAIR);
+            EntityUtil.getEntityMap().put(t.id, t);
+        }
+        if (rChair) {
+            t = new Furniture(AbstractEntity.getNextID(), tX + 32, tY, FurnitureType.LEFT_CHAIR);
+            EntityUtil.getEntityMap().put(t.id, t);
+        }
+        if (Main.client) Log.w("Using server-side world generation code on the client!");
     }
 }

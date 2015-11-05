@@ -12,9 +12,7 @@ public abstract class LivingEntity extends AbstractEntity {
     private double health = 100;
     public String name = "";
     public boolean symbioteControlled = false;
-    
-    //TODO: Make sure health is always synced up between the server and clients
-    
+        
     public LivingEntity(int id, double x, double y) {
         super(id, x, y);
     }

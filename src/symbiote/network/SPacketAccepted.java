@@ -1,5 +1,6 @@
 package symbiote.network;
 
+import java.awt.event.KeyEvent;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import javax.swing.JOptionPane;
@@ -42,9 +43,9 @@ public class SPacketAccepted extends AbstractPacket {
 
             JOptionPane.showMessageDialog(null, "Name accepted! You are " + (Client.symbiote ? "" : "not ") + "the Symbiote!");
             if (Client.symbiote) {
-                SkillBar.setSkills(new Skill[]{Skill.SYMBIOTE_POSSESS, Skill.NOTHING, Skill.NOTHING, Skill.NOTHING});
+                SkillBar.setSkills(new Object[][]{ {KeyEvent.VK_1, Skill.SYMBIOTE_POSSESS},  {KeyEvent.VK_2, Skill.NOTHING}, {KeyEvent.VK_3, Skill.NOTHING} , {KeyEvent.VK_4, Skill.NOTHING}});
             } else {
-                SkillBar.setSkills(new Skill[]{Skill.SHOOT_BULLET, Skill.NOTHING, Skill.NOTHING, Skill.NOTHING});
+                SkillBar.setSkills(new Object[][]{ {KeyEvent.VK_1, Skill.SHOOT_BULLET},  {KeyEvent.VK_2, Skill.NOTHING}, {KeyEvent.VK_3, Skill.NOTHING} , {KeyEvent.VK_4, Skill.NOTHING}});
             }
         }
     }
