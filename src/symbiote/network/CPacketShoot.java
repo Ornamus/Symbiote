@@ -1,8 +1,5 @@
 package symbiote.network;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
 import symbiote.entity.AbstractEntity;
 import symbiote.entity.EntityBullet;
 import symbiote.server.Server;
@@ -19,31 +16,12 @@ public class CPacketShoot extends AbstractPacket {
     double angle;
     int owner;
     
-    public CPacketShoot() {
-    }
-    
     public CPacketShoot(double x, double y, double angle, int owner) {
         super();
         this.x = x;
         this.y = y;
         this.angle = angle;
         this.owner = owner;
-    }
-
-    @Override
-    public void write(ObjectOutputStream out) throws Exception {
-        out.writeDouble(x);
-        out.writeDouble(y);
-        out.writeDouble(angle);
-        out.writeInt(owner);
-    }
-
-    @Override
-    public void read(ObjectInputStream in) throws Exception {
-        this.x = in.readDouble();
-        this.y = in.readDouble();
-        this.angle = in.readDouble();
-        this.owner = in.readInt();
     }
 
     @Override

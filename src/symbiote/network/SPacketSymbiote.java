@@ -1,8 +1,5 @@
 package symbiote.network;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
 import symbiote.client.Client;
 import symbiote.entity.client.ClientEntitySymbiote;
 import symbiote.entity.client.ClientEntityThisSymbiote;
@@ -12,9 +9,6 @@ public class SPacketSymbiote extends SAbstractPacketEntity {
     boolean dontUse;
     private boolean you;
     String name;
-
-    public SPacketSymbiote() {
-    }
     
     public SPacketSymbiote(int id, String name, double x, double y, double angle, boolean dontUse, boolean you) {
         super(id, x, y, angle);
@@ -22,24 +16,6 @@ public class SPacketSymbiote extends SAbstractPacketEntity {
         this.name = name;
         this.dontUse = dontUse;
         this.you = you;
-    }
-
-    @Override
-    public void write(ObjectOutputStream out) throws Exception {
-        super.write(out);
-        
-        out.writeUTF(name);
-        out.writeBoolean(dontUse);
-        out.writeBoolean(this.you);
-    }
-
-    @Override
-    public void read(ObjectInputStream in) throws Exception {
-        super.read(in);
-        
-        this.name = in.readUTF();
-        this.dontUse = in.readBoolean();
-        this.you = in.readBoolean();
     }
     
     @Override

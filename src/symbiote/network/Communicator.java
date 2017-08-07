@@ -1,14 +1,9 @@
 package symbiote.network;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import symbiote.Main;
-import symbiote.client.Client;
 
 public abstract class Communicator extends Thread {
     public enum Type {
@@ -17,72 +12,59 @@ public abstract class Communicator extends Thread {
     }
     
     private Socket socket = null;
-    private DataInputStream in;
-    private DataOutputStream out;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
 
     public String name = "";
     private boolean connected = false;
     
     private Queue<AbstractPacket> queuedPackets = new ConcurrentLinkedQueue<>();
+
+    private Thread receiveThread;
     
     public Communicator(Socket socket) {
         this.socket = socket;
     }
-    
-    public void sendPackets() throws Exception {
-        AbstractPacket s;
-        while ((s = queuedPackets.poll()) != null) {
-            int id = 0;
-            try {
-                id = Main.packetToID.get(s.getClass());
-            } catch (NullPointerException e) {
-                System.err.println("Packet " + s.getClass() + " is not defined in packetToID!");
-                continue;
-            }
-            
-            out.writeByte(id);
-            
-            byte[] b = s.toBytes();
-            
-            out.writeInt(b.length);
-            out.write(b);
-            
-            if (Client.DEBUG)
-            System.out.println(this.getType() + " sending packet "+s+" id " + Main.packetToID.get(s.getClass()) + s.getClass() + " #" + b.length);
+
+    protected void sendPackets() throws Exception {
+        AbstractPacket p;
+        while ((p = queuedPackets.poll()) != null) {
+            out.writeObject(p);
+            out.flush();
         }
     }
-    
-    public void receievePackets() throws Exception {
-        if (in.available() > 0) {
-            // get the length of the following message
-            int type = in.readByte();
-            int length = in.readInt();
-            byte[] packetData = new byte[length];
-            
-            in.readFully(packetData);
-            
-            AbstractPacket packet = Main.idToPacket.get(type).newInstance();
-            packet.fromBytes(packetData);
-            System.out.println(this.getType() + " reading packet "+packet+" id " + type + Main.idToPacket.get(type) + " #" + length);
-            packet.handle(this);
-        } else {
-            sleep(25);
+
+    protected void receivePackets()  {
+        try {
+            Object o = in.readObject();
+            AbstractPacket p = (AbstractPacket) o;
+            p.handle(this);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     
     @Override
     public void run() {
         try {
-            out = new DataOutputStream(socket.getOutputStream());
-            in = new DataInputStream(socket.getInputStream());
+            out = new ObjectOutputStream(socket.getOutputStream());
+            out.flush();
+            in = new ObjectInputStream(socket.getInputStream());
             connected = true;
             
             onConnect();
-            
+
+            receiveThread = new Thread() {
+                @Override
+                public void run() {
+                    while (true) receivePackets();
+                }
+            };
+            receiveThread.start();
+
             while (true) {
                 try {
                     sendPackets();
-                    receievePackets();
                 } catch (Exception e) {
                     // TODO: non-side-effect handle error
                     e.printStackTrace();
@@ -109,11 +91,11 @@ public abstract class Communicator extends Thread {
         return socket;
     }
 
-    public DataInputStream getIn() {
+    public ObjectInputStream getIn() {
         return in;
     }
 
-    public DataOutputStream getOut() {
+    public ObjectOutputStream getOut() {
         return out;
     }
 

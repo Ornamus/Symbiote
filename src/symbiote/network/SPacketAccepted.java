@@ -1,8 +1,6 @@
 package symbiote.network;
 
 import java.awt.event.KeyEvent;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import javax.swing.JOptionPane;
 import symbiote.client.Client;
 import symbiote.client.Skill;
@@ -12,25 +10,10 @@ import symbiote.network.Communicator.Type;
 public class SPacketAccepted extends AbstractPacket {
     String name;
     boolean isSymbiote;
-    
-    public SPacketAccepted() {
-    }
-    
+
     public SPacketAccepted(String name, boolean isSymbiote) {
         this.name = name;
         this.isSymbiote = isSymbiote;
-    }
-    
-    @Override
-    public void write(ObjectOutputStream out) throws Exception {
-        out.writeUTF(this.name);
-        out.writeBoolean(this.isSymbiote);
-    }
-
-    @Override
-    public void read(ObjectInputStream in) throws Exception {
-        this.name = in.readUTF();
-        this.isSymbiote = in.readBoolean();
     }
 
     @Override

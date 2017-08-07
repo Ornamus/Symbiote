@@ -1,7 +1,5 @@
 package symbiote.network;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import symbiote.client.Client;
 import symbiote.entity.client.ClientEntityBullet;
 import symbiote.network.Communicator.Type;
@@ -16,26 +14,9 @@ public class SPacketBullet extends SAbstractPacketEntity {
 
     int owner;
     
-    public SPacketBullet() {
-    }
-    
     public SPacketBullet(int id, double x, double y, double angle, int owner) {
         super(id, x, y, angle);
         this.owner = owner;
-    }
-    
-    @Override
-    public void write(ObjectOutputStream out) throws Exception {
-        super.write(out);
-        
-        out.writeInt(owner);
-    }
-
-    @Override
-    public void read(ObjectInputStream in) throws Exception {
-        super.read(in);
-        
-        owner = in.readInt();
     }
 
     @Override

@@ -43,6 +43,9 @@ public class Block extends ClientEntity implements Drawable {
             g.setColor(oldColor);
         }
     }
+
+    @Override
+    public void finalDraw(Graphics2D g) {}
     
         
     public String getStringData() {

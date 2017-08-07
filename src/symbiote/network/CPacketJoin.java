@@ -1,7 +1,5 @@
 package symbiote.network;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import symbiote.entity.AbstractEntity;
 import symbiote.entity.EntityPlayer;
 import symbiote.entity.EntitySymbiote;
@@ -11,21 +9,8 @@ import symbiote.server.Server;
 public class CPacketJoin extends AbstractPacket {
     String name;
     
-    public CPacketJoin() {
-    }
-    
     public CPacketJoin(String name) {
         this.name = name;
-    }
-    
-    @Override
-    public void write(ObjectOutputStream out) throws Exception {
-        out.writeUTF(this.name);
-    }
-
-    @Override
-    public void read(ObjectInputStream in) throws Exception {
-        this.name = in.readUTF();
     }
 
     @Override

@@ -1,7 +1,5 @@
 package symbiote.network;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import symbiote.Main;
 import symbiote.client.Client;
@@ -14,9 +12,6 @@ import symbiote.world.Block;
 
 public class SPacketWorld extends AbstractPacket {
     String worldData;
-    
-    public SPacketWorld() {
-    }
     
     public SPacketWorld(boolean createWorldData) {
         if (createWorldData) {
@@ -37,16 +32,6 @@ public class SPacketWorld extends AbstractPacket {
                 Log.w("There is no world data!");
             }
         }
-    }
-    
-    @Override
-    public void write(ObjectOutputStream out) throws Exception {
-        out.writeUTF(worldData);
-    }
-
-    @Override
-    public void read(ObjectInputStream in) throws Exception {
-        this.worldData = in.readUTF();
     }
 
     @Override

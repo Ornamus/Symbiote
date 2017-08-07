@@ -14,7 +14,7 @@ public class Client extends JFrame {
     /**
      * Number of milliseconds that should elapse before sending an update packet. (ie position update packet)
      */
-    public static final long PACKET_SEND_RATE = 200;
+    public static final long PACKET_SEND_RATE = 150;
 
     /**
      * Whether DEBUG rendering should be shown by renderers.
