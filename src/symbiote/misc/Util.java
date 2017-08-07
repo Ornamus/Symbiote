@@ -147,4 +147,8 @@ public class Util {
     public static boolean same(Color c1, Color c2) {
         return (c1.getRed() == c2.getRed() && c1.getGreen() == c2.getGreen() && c1.getBlue() == c2.getBlue());
     }
+
+    public static double distance(double x1, double y1, double x2, double y2) {
+        return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+    }
 }

@@ -16,6 +16,9 @@ nbdist/
 nbactions.xml
 nb-configuration.xml
 
+# IntelliJ specific #
+.idea/
+
 # Class Files #
 *.class
 
@@ -23,4 +26,3 @@ nb-configuration.xml
 *.jar
 *.war
 *.ear
-src/symbiote/network/CPacketJoin.java

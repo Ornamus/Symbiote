@@ -14,7 +14,7 @@ import symbiote.resources.ImageUtil;
 
 public abstract class Skill {
     
-    //TODO: Have serverr handle skills (use code, cooldowns, ect...)
+    //TODO: Have server handle certain skill data (mainly cooldowns and target validation)
     //TODO: Effects that make it obvious what skill is selected
     
     public static Skill SHOOT_BULLET = new Skill("Shoot", 0.4, "skill_gun"){
@@ -32,23 +32,26 @@ public abstract class Skill {
         
         @Override
         public void code(AbstractEntity user) {
-            if (user instanceof ClientEntityThisSymbiote) {
+            if (Client.symbiote) {
+                //TODO: function for getting symbiote entity
                 ClientEntityThisSymbiote sim = (ClientEntityThisSymbiote) user;
                 if (sim.controlled == sim) {
                     Point p = Util.getMouseInWorld();
                     for (AbstractEntity t : EntityUtil.getEntities()) {
-                        // TODO: complete controllable
+                        // TODO: complete controllable (what does this mean)
                         if (t instanceof LivingEntity && t.getBounds().contains(p)) {
-                        // TODO: uncomment magnitude squared
-                            //if ((this.x - t.x)*(this.x - t.x) + (this.y - t.y)*(this.y - t.y) < CONTROLDISTANCE*CONTROLDISTANCE) {
-                            LivingEntity e = (LivingEntity) t;
-                            e.symbioteControlled = true;
-                            sim.controlled = e;
-                            Client.focus = e;
-                            icon = stop_possess;                           
-                            Client.communicator.sendMessage(new CPacketSymbioteControl(e.name));
-                            break;
-                            //}
+                            // TODO: uncomment magnitude squared
+
+
+                            if (Util.distance(sim.x, sim.y, t.x, t.y) < 300) { //TODO: don't hardcode this distance
+                                LivingEntity e = (LivingEntity) t;
+                                e.symbioteControlled = true;
+                                sim.controlled = e;
+                                Client.focus = e;
+                                icon = stop_possess;
+                                Client.communicator.sendMessage(new CPacketSymbioteControl(e.name));
+                                break;
+                            }
                         }
                     }
                 } else {

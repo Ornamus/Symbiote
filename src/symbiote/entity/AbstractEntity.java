@@ -16,6 +16,7 @@ import symbiote.server.Server;
 import symbiote.world.Block;
 
 public abstract class AbstractEntity {
+
     public static int getNextID() {
         return ++STATICID;
     }
